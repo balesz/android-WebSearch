@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-    <TextView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:text="Detail" />
+    <EditText android:id="@+id/fieldName"
+              android:hint="@string/hint_name"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
+
+    <EditText android:id="@+id/fieldUrl"
+              android:hint="@string/hint_url"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <EditText android:id="@+id/fieldImageUrl"
+                  android:hint="@string/hint_image"
+                  android:layout_weight="1"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+
+        <ImageView android:id="@+id/fieldImage"
+                   android:src="@drawable/ic_refresh"
+                   android:layout_weight="0"
+                   android:layout_width="32dp"
+                   android:layout_height="32dp"/>
+
+    </LinearLayout>
+
+    <EditText android:id="@+id/fieldDescription"
+              android:hint="@string/hint_description"
+              android:singleLine="false"
+              android:lines="3"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
 
 </LinearLayout>
