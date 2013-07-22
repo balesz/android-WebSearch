@@ -1,8 +1,8 @@
 package net.solutinno.websearch;
 
-import android.content.Intent;
 import android.os.Bundle;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -21,8 +21,14 @@ public class MainActivity extends SherlockFragmentActivity {
         return true;
     }
 
-    public void onNew(MenuItem sender) {
-        startActivity(new Intent(this, DetailActivity.class));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        SherlockFragment fragment = (SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_list);
+        if (fragment != null) {
+            fragment.onOptionsItemSelected(item);
+            return true;
+        }
+        return false;
     }
 
 }

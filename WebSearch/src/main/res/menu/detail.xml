@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/action_save"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_accept"
-        android:orderInCategory="1"
-        android:showAsAction="always" />
+    <item android:id="@+id/action_delete"
+          android:title="@string/action_delete"
+          android:icon="@drawable/ic_discard"
+          android:orderInCategory="1"
+          android:showAsAction="always" />
 
     <item android:id="@+id/action_cancel"
           android:title="@string/action_cancel"
@@ -12,10 +12,10 @@
           android:orderInCategory="2"
           android:showAsAction="always" />
 
-    <item android:id="@+id/action_delete"
-          android:title="@string/action_delete"
-          android:icon="@drawable/ic_discard"
-          android:orderInCategory="3"
-          android:showAsAction="always" />
+    <item android:id="@+id/action_save"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_accept"
+        android:orderInCategory="3"
+        android:showAsAction="always" />
 
 </menu>

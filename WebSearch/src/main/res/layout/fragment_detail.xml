@@ -7,15 +7,19 @@
 
     <EditText android:id="@+id/fieldName"
               android:hint="@string/hint_name"
+              android:layout_marginTop="@dimen/detail_field_margin"
+              android:layout_marginBottom="@dimen/detail_field_margin"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
 
     <EditText android:id="@+id/fieldUrl"
               android:hint="@string/hint_url"
+              android:layout_marginBottom="@dimen/detail_field_margin"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
 
     <LinearLayout android:orientation="horizontal"
+                  android:layout_marginBottom="@dimen/detail_field_margin"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
 

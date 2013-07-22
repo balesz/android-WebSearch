@@ -2,7 +2,6 @@
     <item android:id="@+id/action_add"
         android:title="@string/action_add"
         android:icon="@drawable/ic_new"
-        android:onClick="onNew"
         android:orderInCategory="1"
         android:showAsAction="always" />
 </menu>
