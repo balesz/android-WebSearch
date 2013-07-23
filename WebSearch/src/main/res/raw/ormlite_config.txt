@@ -1,0 +1,30 @@
+#
+# generated on 2013/07/23 11:37:22
+#
+# --table-start--
+dataClass=net.solutinno.websearch.data.SearchEngine
+tableName=search_engine
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=description
+# --field-end--
+# --field-start--
+fieldName=url
+# --field-end--
+# --field-start--
+fieldName=imageUrl
+# --field-end--
+# --field-start--
+fieldName=image
+dataPersister=BYTE_ARRAY
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

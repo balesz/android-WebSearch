@@ -8,8 +8,9 @@
     <string name="action_cancel">Cancel</string>
     <string name="hint_name">Name</string>
     <string name="hint_url">Url</string>
-    <string name="hint_image">Image</string>
+    <string name="hint_image">Image Url</string>
     <string name="hint_description">Description</string>
     <string name="action_delete">Delete</string>
+    <string name="test_text">Test text</string>
 
 </resources>

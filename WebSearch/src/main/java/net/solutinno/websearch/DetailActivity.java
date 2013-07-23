@@ -26,10 +26,8 @@ public class DetailActivity extends SherlockFragmentActivity {
         SherlockFragment fragment = (SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
         if (fragment != null) {
             fragment.onOptionsItemSelected(item);
-            finish();
-            return true;
         }
-        else return false;
+        return true;
     }
 
 }

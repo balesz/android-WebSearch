@@ -26,9 +26,8 @@ public class MainActivity extends SherlockFragmentActivity {
         SherlockFragment fragment = (SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_list);
         if (fragment != null) {
             fragment.onOptionsItemSelected(item);
-            return true;
         }
-        return false;
+        return true;
     }
 
 }
