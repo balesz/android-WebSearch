@@ -1,14 +1,14 @@
 package net.solutinno.websearch;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
@@ -16,11 +16,13 @@ import com.actionbarsherlock.view.MenuItem;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
+import net.solutinno.websearch.utils.Helpers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.UUID;
 
-public class DetailFragment extends SherlockFragment
-{
+public class DetailFragment extends SherlockFragment implements View.OnClickListener {
     TextView mFieldName;
     TextView mFieldUrl;
     TextView mFieldImageUrl;
@@ -37,6 +39,8 @@ public class DetailFragment extends SherlockFragment
         mFieldImage = (ImageView) getView().findViewById(R.id.fieldImage);
         mFieldDescription = (TextView) getView().findViewById(R.id.fieldDescription);
 
+        mFieldImage.setOnClickListener(this);
+
         setData();
     }
 
@@ -49,8 +53,33 @@ public class DetailFragment extends SherlockFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete) Delete();
         else if (item.getItemId() == R.id.action_save) Save();
-        getSherlockActivity().finish();
+        else if (item.getItemId() == R.id.action_cancel) getSherlockActivity().finish();
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mFieldImageUrl.getText().toString().isEmpty()) {
+            mFieldName.setText("Torrentz SSL");
+            mFieldUrl.setText("https://torrentz.eu/search?f={searchTerms}");
+            mFieldImageUrl.setText("http://mycroftproject.com/updateos.php/id0/torrentz_secure.ico");
+            mFieldDescription.setText("Search dozens of torrent sites");
+        }
+        else {
+            URL url = null;
+            try { url = new URL(mFieldImageUrl.getText().toString()); } catch (Exception ex) { }
+            new AsyncTask<URL, Integer, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(URL... urls) {
+                    byte[] data = Helpers.downloadURL(urls[0]);
+                    return BitmapFactory.decodeByteArray(data, 0, data.length);
+                }
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    mFieldImage.setImageBitmap(bitmap);
+                }
+            }.execute(url);
+        }
     }
 
     void setData() {
@@ -77,11 +106,20 @@ public class DetailFragment extends SherlockFragment
         return result;
     }
 
-    public void Delete() {
+    void Delete() {
         DataProvider.deleteSearchEngine(getSherlockActivity(), getData());
+        getSherlockActivity().finish();
     }
 
-    public void Save() {
-        DataProvider.updateSearchEngine(getSherlockActivity(), getData());
+    void Save() {
+        if (Validate()) {
+            DataProvider.updateSearchEngine(getSherlockActivity(), getData());
+            getSherlockActivity().finish();
+        }
     }
+
+    boolean Validate() {
+        return true;
+    }
+
 }

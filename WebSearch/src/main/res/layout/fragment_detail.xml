@@ -7,6 +7,7 @@
 
     <EditText android:id="@+id/fieldName"
               android:hint="@string/hint_name"
+              android:inputType="text|textCapWords"
               android:layout_marginTop="@dimen/detail_field_margin"
               android:layout_marginBottom="@dimen/detail_field_margin"
               android:layout_width="match_parent"
@@ -14,6 +15,7 @@
 
     <EditText android:id="@+id/fieldUrl"
               android:hint="@string/hint_url"
+              android:inputType="text|textUri"
               android:layout_marginBottom="@dimen/detail_field_margin"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
@@ -25,12 +27,14 @@
 
         <EditText android:id="@+id/fieldImageUrl"
                   android:hint="@string/hint_image"
+                  android:inputType="text|textUri"
                   android:layout_weight="1"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
 
         <ImageView android:id="@+id/fieldImage"
                    android:src="@drawable/ic_refresh"
+                   android:layout_gravity="center"
                    android:layout_weight="0"
                    android:layout_width="32dp"
                    android:layout_height="32dp"/>
@@ -39,6 +43,7 @@
 
     <EditText android:id="@+id/fieldDescription"
               android:hint="@string/hint_description"
+              android:inputType="text|textCapSentences"
               android:singleLine="false"
               android:lines="3"
               android:layout_width="match_parent"

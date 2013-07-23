@@ -1,6 +1,5 @@
 package net.solutinno.websearch;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
