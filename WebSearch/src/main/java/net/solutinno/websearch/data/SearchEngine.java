@@ -1,6 +1,8 @@
 package net.solutinno.websearch.data;
 
-import com.j256.ormlite.field.DataType;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -30,6 +32,7 @@ public class SearchEngine
     @DatabaseField
     public String imageUrl;
 
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    public byte[] image;
+    public Drawable image;
+
+    public Uri imageUri;
 }

@@ -2,6 +2,7 @@ package net.solutinno.websearch;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +19,7 @@ import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.websearch.utils.Helpers;
 
-import java.net.MalformedURLException;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete) Delete();
         else if (item.getItemId() == R.id.action_save) Save();
-        else if (item.getItemId() == R.id.action_cancel) getSherlockActivity().finish();
+        else if (item.getItemId() == R.id.action_cancel) Cancel();
         return true;
     }
 
@@ -82,19 +83,19 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
         }
     }
 
-    void setData() {
+    private void setData() {
         String id = getSherlockActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
         if (id != null) {
             SearchEngine engine = DataProvider.getSearchEngine(getSherlockActivity(), UUID.fromString(id));
             mFieldName.setText(engine.name);
             mFieldUrl.setText(engine.url);
             mFieldImageUrl.setText(engine.imageUrl);
-            mFieldImage.setImageDrawable(null);
+            mFieldImage.setImageURI(engine.imageUri);
             mFieldDescription.setText(engine.description);
         }
     }
 
-    SearchEngine getData() {
+    private SearchEngine getData() {
         String id = getSherlockActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
         SearchEngine result = new SearchEngine();
         result.id = id == null ? UUID.randomUUID() : UUID.fromString(id);
@@ -102,24 +103,30 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
         result.url = mFieldUrl.getText().toString();
         result.imageUrl = mFieldImageUrl.getText().toString();
         result.description = mFieldDescription.getText().toString();
-        result.image = null;
+        result.image = mFieldImage.getDrawable();
         return result;
     }
 
-    void Delete() {
+    private void Delete() {
         DataProvider.deleteSearchEngine(getSherlockActivity(), getData());
         getSherlockActivity().finish();
     }
 
-    void Save() {
+    private void Save() {
         if (Validate()) {
             DataProvider.updateSearchEngine(getSherlockActivity(), getData());
-            getSherlockActivity().finish();
         }
+        getSherlockActivity().finish();
     }
 
-    boolean Validate() {
-        return true;
+    private void Cancel() {
+        getSherlockActivity().finish();
+    }
+
+    private boolean Validate() {
+        boolean result = !mFieldName.getText().toString().isEmpty();
+        result |= !mFieldUrl.getText().toString().isEmpty();
+        return  result;
     }
 
 }

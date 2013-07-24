@@ -1,5 +1,5 @@
 #
-# generated on 2013/07/23 11:37:22
+# generated on 2013/07/24 04:20:25
 #
 # --table-start--
 dataClass=net.solutinno.websearch.data.SearchEngine
@@ -20,10 +20,6 @@ fieldName=url
 # --field-end--
 # --field-start--
 fieldName=imageUrl
-# --field-end--
-# --field-start--
-fieldName=image
-dataPersister=BYTE_ARRAY
 # --field-end--
 # --table-fields-end--
 # --table-end--

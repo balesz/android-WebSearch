@@ -1,10 +1,5 @@
 package net.solutinno.websearch.utils;
 
-import android.content.AsyncTaskLoader;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

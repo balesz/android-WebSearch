@@ -8,7 +8,6 @@
     <EditText android:id="@+id/fieldName"
               android:hint="@string/hint_name"
               android:inputType="text|textCapWords"
-              android:layout_marginTop="@dimen/detail_field_margin"
               android:layout_marginBottom="@dimen/detail_field_margin"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" />
@@ -34,6 +33,9 @@
 
         <ImageView android:id="@+id/fieldImage"
                    android:src="@drawable/ic_refresh"
+                   android:scaleType="fitCenter"
+                   android:layout_marginLeft="8dp"
+                   android:layout_marginRight="8dp"
                    android:layout_gravity="center"
                    android:layout_weight="0"
                    android:layout_width="32dp"
