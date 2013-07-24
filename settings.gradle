@@ -1,1 +1,1 @@
-include ':WebSearch', ':submodule-ActionBarSherlock:actionbarsherlock', ':submodule-AndroidValidator'
+include ':WebSearch', ':submodule-ActionBarSherlock:actionbarsherlock'
