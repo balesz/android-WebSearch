@@ -14,8 +14,9 @@ repositories {
 
 dependencies {
     compile 'com.android.support:support-v4:13.0.+'
-    compile project(':submodule-ActionBarSherlock:actionbarsherlock')
     compile 'com.j256.ormlite:ormlite-android:4.45'
+    compile project(':submodule-ActionBarSherlock:actionbarsherlock')
+    compile project(':submodule-AndroidValidator')
 }
 
 android {

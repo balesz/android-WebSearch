@@ -1,3 +1,6 @@
 [submodule "submodule-ActionBarSherlock"]
 	path = submodule-ActionBarSherlock
 	url = https://balesz@github.com/balesz/ActionBarSherlock.git
+[submodule "submodule-AndroidValidator"]
+	path = submodule-AndroidValidator
+	url = https://balesz@github.com/balesz/Android-Validator.git
