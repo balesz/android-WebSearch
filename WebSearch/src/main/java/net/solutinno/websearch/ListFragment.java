@@ -31,7 +31,7 @@ public class ListFragment extends SherlockFragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
 
         if (mListView != null) {
-            mAdapter = new SimpleCursorAdapter(getSherlockActivity(), R.layout.list_item, new SearchEngineCursor(), SearchEngineCursor.FIELDS, SearchEngineCursor.UI_FIELDS, 0);
+            mAdapter = new SimpleCursorAdapter(getSherlockActivity(), R.layout.list_item, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 0);
             mListView.setAdapter(mAdapter);
         }
 

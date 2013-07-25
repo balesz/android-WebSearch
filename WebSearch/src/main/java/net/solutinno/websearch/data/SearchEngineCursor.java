@@ -1,13 +1,9 @@
 package net.solutinno.websearch.data;
 
 import android.database.MatrixCursor;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 
-import net.solutinno.websearch.Application;
 import net.solutinno.websearch.R;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +15,12 @@ public class SearchEngineCursor extends MatrixCursor
     public static final String COLUMN_IMAGE = "IMAGE";
 
     public static final String[] COLUMNS = { "_id", COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_IMAGE };
-    public static final String[] FIELDS = { COLUMN_IMAGE, COLUMN_NAME, COLUMN_DESCRIPTION };
-    public static final int[] UI_FIELDS = { R.id.item_icon, R.id.item_text1, R.id.item_text2 };
+
+    public static final String[] LIST_FIELDS = { COLUMN_IMAGE, COLUMN_NAME, COLUMN_DESCRIPTION };
+    public static final int[] LIST_UI_FIELDS = { R.id.item_icon, R.id.item_text1, R.id.item_text2 };
+
+    public static final String[] GRID_FIELDS = { COLUMN_IMAGE, COLUMN_NAME };
+    public static final int[] GRID_UI_FIELDS = { R.id.share_item_image, R.id.share_item_text };
 
     public SearchEngineCursor() { super(COLUMNS); }
 
