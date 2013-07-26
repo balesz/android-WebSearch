@@ -11,6 +11,8 @@ import java.util.UUID;
 @DatabaseTable(tableName = "search_engine")
 public class SearchEngine
 {
+    public static final String SEARCH_TERM = "{searchTerms}";
+
     public SearchEngine() { }
 
     public SearchEngine(UUID id) {

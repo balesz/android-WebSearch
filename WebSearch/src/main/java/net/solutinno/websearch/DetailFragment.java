@@ -27,20 +27,32 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
     TextView mFieldName;
     TextView mFieldUrl;
     TextView mFieldImageUrl;
-    ImageView mFieldImage;
     TextView mFieldDescription;
+    ImageView mButtonRefreshImage;
+    ImageView mButtonAddSearchTerm;
+
+    SearchEngine mEngine;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        String id = getSherlockActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
+        if (id != null) {
+            mEngine = DataProvider.getSearchEngine(getSherlockActivity(), UUID.fromString(id));
+        }
+        else mEngine = new SearchEngine();
+
         mFieldName = (TextView) getView().findViewById(R.id.fieldName);
         mFieldUrl = (TextView) getView().findViewById(R.id.fieldUrl);
         mFieldImageUrl = (TextView) getView().findViewById(R.id.fieldImageUrl);
-        mFieldImage = (ImageView) getView().findViewById(R.id.fieldImage);
         mFieldDescription = (TextView) getView().findViewById(R.id.fieldDescription);
 
-        mFieldImage.setOnClickListener(this);
+        mButtonRefreshImage = (ImageView) getView().findViewById(R.id.buttonRefreshImage);
+        mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.buttonAddSearchTerm);
+
+        mButtonRefreshImage.setOnClickListener(this);
+        mButtonAddSearchTerm.setOnClickListener(this);
 
         setData();
     }
@@ -60,50 +72,53 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (mFieldImageUrl.getText().toString().isEmpty()) {
-            mFieldName.setText("Torrentz SSL");
-            mFieldUrl.setText("https://torrentz.eu/search?f={searchTerms}");
-            mFieldImageUrl.setText("http://mycroftproject.com/updateos.php/id0/torrentz_secure.ico");
-            mFieldDescription.setText("Search dozens of torrent sites");
-        }
-        else {
-            URL url = null;
-            try { url = new URL(mFieldImageUrl.getText().toString()); } catch (Exception ex) { }
-            new AsyncTask<URL, Integer, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(URL... urls) {
-                    byte[] data = Helpers.downloadURL(urls[0]);
-                    return BitmapFactory.decodeByteArray(data, 0, data.length);
-                }
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    mFieldImage.setImageBitmap(bitmap);
-                }
-            }.execute(url);
+
+        if (view == mButtonRefreshImage) {
+            if (mFieldImageUrl.getText().toString().isEmpty()) {
+                mFieldName.setText("Torrentz SSL");
+                mFieldUrl.setText("https://torrentz.eu/search?f={searchTerms}");
+                mFieldImageUrl.setText("http://mycroftproject.com/updateos.php/id0/torrentz_secure.ico");
+                mFieldDescription.setText("Search dozens of torrent sites");
+            }
+            else {
+                URL url = null;
+                try { url = new URL(mFieldImageUrl.getText().toString()); } catch (Exception ex) { }
+                new AsyncTask<URL, Integer, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(URL... urls) {
+                        byte[] data = Helpers.downloadURL(urls[0]);
+                        return BitmapFactory.decodeByteArray(data, 0, data.length);
+                    }
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+                        BitmapDrawable icon = new BitmapDrawable(null, Bitmap.createScaledBitmap(bitmap, 48, 48, true));
+                        mButtonRefreshImage.setImageBitmap(bitmap);
+                        mEngine.image = icon;
+                    }
+                }.execute(url);
+            }
         }
     }
 
     private void setData() {
-        String id = getSherlockActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
-        if (id != null) {
-            SearchEngine engine = DataProvider.getSearchEngine(getSherlockActivity(), UUID.fromString(id));
-            mFieldName.setText(engine.name);
-            mFieldUrl.setText(engine.url);
-            mFieldImageUrl.setText(engine.imageUrl);
-            mFieldImage.setImageURI(engine.imageUri);
-            mFieldDescription.setText(engine.description);
+        if (mEngine.id != null) {
+            mFieldName.setText(mEngine.name);
+            mFieldUrl.setText(mEngine.url);
+            mFieldImageUrl.setText(mEngine.imageUrl);
+            Bitmap bmp = BitmapFactory.decodeFile(mEngine.imageUri.getPath());
+            if (bmp != null) mButtonRefreshImage.setImageBitmap(bmp);
+            mFieldDescription.setText(mEngine.description);
         }
     }
 
     private SearchEngine getData() {
-        String id = getSherlockActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
         SearchEngine result = new SearchEngine();
-        result.id = id == null ? UUID.randomUUID() : UUID.fromString(id);
+        result.id = mEngine.id == null ? UUID.randomUUID() : mEngine.id;
         result.name = mFieldName.getText().toString();
         result.url = mFieldUrl.getText().toString();
         result.imageUrl = mFieldImageUrl.getText().toString();
         result.description = mFieldDescription.getText().toString();
-        result.image = mFieldImage.getDrawable();
+        result.image = mEngine.image;
         return result;
     }
 

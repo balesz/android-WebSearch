@@ -2,6 +2,7 @@ package net.solutinno.websearch;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -27,18 +29,6 @@ public class ListFragment extends SherlockFragment implements LoaderManager.Load
     SimpleCursorAdapter mAdapter;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (mListView != null) {
-            mAdapter = new SimpleCursorAdapter(getSherlockActivity(), R.layout.list_item, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 0);
-            mListView.setAdapter(mAdapter);
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_list, container, false);
         if (result != null) {
@@ -46,6 +36,27 @@ public class ListFragment extends SherlockFragment implements LoaderManager.Load
             mListView.setOnItemClickListener(this);
         }
         return result;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (mListView != null) {
+            mAdapter = new SimpleCursorAdapter(getSherlockActivity(), R.layout.list_item, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
+            mListView.setAdapter(mAdapter);
+            mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+                @Override
+                public boolean setViewValue(View view, Cursor cursor, int i) {
+                    if (view.getId() == R.id.item_icon) {
+                        ((ImageView)view).setImageDrawable(null);
+                    }
+                    return false;
+                }
+            });
+        }
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -83,9 +94,7 @@ public class ListFragment extends SherlockFragment implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<List<SearchEngine>> listLoader) {
         if (mAdapter != null) {
-            Cursor cursor = mAdapter.getCursor();
             mAdapter.changeCursor(null);
-            cursor.close();
         }
     }
 

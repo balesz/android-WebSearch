@@ -52,7 +52,7 @@ public class ShareActivity extends SherlockActivity implements AdapterView.OnIte
         String id = mAdapter.getCursor().getString(mAdapter.getCursor().getColumnIndex(SearchEngineCursor.COLUMN_ID));
         if (id == null) return;
         SearchEngine engine = DataProvider.getSearchEngine(this, UUID.fromString(id));
-        String url = engine.url.replace("{searchTerms}", mSearchTerm);
+        String url = engine.url.replace(SearchEngine.SEARCH_TERM, mSearchTerm);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
         finish();

@@ -5,19 +5,46 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <EditText android:id="@+id/fieldName"
-              android:hint="@string/hint_name"
-              android:inputType="text|textCapWords"
-              android:layout_marginBottom="@dimen/detail_field_margin"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_marginBottom="@dimen/detail_field_margin"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
 
-    <EditText android:id="@+id/fieldUrl"
-              android:hint="@string/hint_url"
-              android:inputType="text|textUri"
-              android:layout_marginBottom="@dimen/detail_field_margin"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
+        <EditText android:id="@+id/fieldName"
+                  android:hint="@string/hint_name"
+                  android:inputType="text|textCapWords"
+                  android:layout_marginBottom="@dimen/detail_field_margin"
+                  android:layout_weight="1"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_marginBottom="@dimen/detail_field_margin"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <EditText android:id="@+id/fieldUrl"
+                  android:hint="@string/hint_url"
+                  android:inputType="text|textUri"
+                  android:layout_marginBottom="@dimen/detail_field_margin"
+                  android:layout_weight="1"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" />
+
+        <ImageView android:id="@+id/buttonAddSearchTerm"
+                   android:src="@drawable/ic_new"
+                   android:scaleType="fitCenter"
+                   android:clickable="true"
+                   android:layout_marginLeft="8dp"
+                   android:layout_marginRight="8dp"
+                   android:layout_gravity="center"
+                   android:layout_weight="0"
+                   android:layout_width="32dp"
+                   android:layout_height="32dp"/>
+
+    </LinearLayout>
 
     <LinearLayout android:orientation="horizontal"
                   android:layout_marginBottom="@dimen/detail_field_margin"
@@ -31,9 +58,10 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
 
-        <ImageView android:id="@+id/fieldImage"
+        <ImageView android:id="@+id/buttonRefreshImage"
                    android:src="@drawable/ic_refresh"
                    android:scaleType="fitCenter"
+                   android:clickable="true"
                    android:layout_marginLeft="8dp"
                    android:layout_marginRight="8dp"
                    android:layout_gravity="center"
