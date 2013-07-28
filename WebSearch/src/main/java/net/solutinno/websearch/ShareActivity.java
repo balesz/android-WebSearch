@@ -14,6 +14,8 @@ import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 public class ShareActivity extends Activity implements AdapterView.OnItemClickListener {
@@ -50,9 +52,15 @@ public class ShareActivity extends Activity implements AdapterView.OnItemClickLi
         String id = mAdapter.getCursor().getString(mAdapter.getCursor().getColumnIndex(SearchEngineCursor.COLUMN_ID));
         if (id == null) return;
         SearchEngine engine = DataProvider.getSearchEngine(this, UUID.fromString(id));
-        String url = engine.url.replace(SearchEngine.SEARCH_TERM, mSearchTerm);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
-        finish();
+        try {
+            String url = engine.url.replace(SearchEngine.SEARCH_TERM, URLEncoder.encode(mSearchTerm, "UTF-8"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        finally {
+            finish();
+        }
     }
 }
