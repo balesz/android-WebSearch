@@ -1,13 +1,12 @@
 package net.solutinno.websearch;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
-public class DetailActivity extends SherlockFragmentActivity {
+public class DetailActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,13 +16,13 @@ public class DetailActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.detail, menu);
+        getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        SherlockFragment fragment = (SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
         if (fragment != null) {
             fragment.onOptionsItemSelected(item);
         }

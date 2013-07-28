@@ -5,25 +5,23 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.websearch.utils.Helpers;
 
-import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.UUID;
 
-public class DetailFragment extends SherlockFragment implements View.OnClickListener {
+public class DetailFragment extends Fragment implements View.OnClickListener {
     TextView mFieldName;
     TextView mFieldUrl;
     TextView mFieldImageUrl;
@@ -37,9 +35,9 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String id = getSherlockActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
+        String id = getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
         if (id != null) {
-            mEngine = DataProvider.getSearchEngine(getSherlockActivity(), UUID.fromString(id));
+            mEngine = DataProvider.getSearchEngine(getActivity(), UUID.fromString(id));
         }
         else mEngine = new SearchEngine();
 
@@ -123,19 +121,19 @@ public class DetailFragment extends SherlockFragment implements View.OnClickList
     }
 
     private void Delete() {
-        DataProvider.deleteSearchEngine(getSherlockActivity(), getData());
-        getSherlockActivity().finish();
+        DataProvider.deleteSearchEngine(getActivity(), getData());
+        getActivity().finish();
     }
 
     private void Save() {
         if (Validate()) {
-            DataProvider.updateSearchEngine(getSherlockActivity(), getData());
+            DataProvider.updateSearchEngine(getActivity(), getData());
         }
-        getSherlockActivity().finish();
+        getActivity().finish();
     }
 
     private void Cancel() {
-        getSherlockActivity().finish();
+        getActivity().finish();
     }
 
     private boolean Validate() {

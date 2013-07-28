@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.Sherlock.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
     </style>
 
     <style name="AppTheme" parent="AppBaseTheme">

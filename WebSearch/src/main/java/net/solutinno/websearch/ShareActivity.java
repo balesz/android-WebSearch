@@ -1,5 +1,6 @@
 package net.solutinno.websearch;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockActivity;
 
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
@@ -18,7 +16,7 @@ import net.solutinno.websearch.data.SearchEngineCursor;
 
 import java.util.UUID;
 
-public class ShareActivity extends SherlockActivity implements AdapterView.OnItemClickListener {
+public class ShareActivity extends Activity implements AdapterView.OnItemClickListener {
     GridView mShareGrid;
     String mSearchTerm;
     SimpleCursorAdapter mAdapter;
