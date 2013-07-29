@@ -62,9 +62,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_delete) Delete();
-        else if (item.getItemId() == R.id.action_save) Save();
-        else if (item.getItemId() == R.id.action_cancel) Cancel();
+        switch (item.getItemId()){
+            case R.id.action_delete:
+                Delete(); break;
+            case R.id.action_save:
+                Save(); break;
+            case android.R.id.home:
+            case R.id.action_cancel:
+                Cancel(); break;
+        }
         return true;
     }
 

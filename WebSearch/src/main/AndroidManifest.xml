@@ -33,10 +33,10 @@
             android:finishOnCloseSystemDialogs="true"
             android:finishOnTaskLaunch="true"
             android:excludeFromRecents="true"
-            android:parentActivityName="MainActivity" >
+            android:parentActivityName="net.solutinno.websearch.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value="net.solutinno.websearch.MainActivity" />
         </activity>
         <activity
             android:name="net.solutinno.websearch.ShareActivity"
