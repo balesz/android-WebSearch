@@ -6,14 +6,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
@@ -26,10 +25,10 @@ import java.net.URL;
 import java.util.UUID;
 
 public class DetailFragment extends Fragment implements View.OnClickListener, SelectItemListener {
-    TextView mFieldName;
-    TextView mFieldUrl;
-    TextView mFieldImageUrl;
-    TextView mFieldDescription;
+    EditText mFieldName;
+    EditText mFieldUrl;
+    EditText mFieldImageUrl;
+    EditText mFieldDescription;
     ImageView mButtonRefreshImage;
     ImageView mButtonAddSearchTerm;
 
@@ -39,10 +38,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Se
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mFieldName = (TextView) getView().findViewById(R.id.fieldName);
-        mFieldUrl = (TextView) getView().findViewById(R.id.fieldUrl);
-        mFieldImageUrl = (TextView) getView().findViewById(R.id.fieldImageUrl);
-        mFieldDescription = (TextView) getView().findViewById(R.id.fieldDescription);
+        mFieldName = (EditText) getView().findViewById(R.id.fieldName);
+        mFieldUrl = (EditText) getView().findViewById(R.id.fieldUrl);
+        mFieldImageUrl = (EditText) getView().findViewById(R.id.fieldImageUrl);
+        mFieldDescription = (EditText) getView().findViewById(R.id.fieldDescription);
 
         mButtonRefreshImage = (ImageView) getView().findViewById(R.id.buttonRefreshImage);
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.buttonAddSearchTerm);
@@ -85,6 +84,17 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Se
                         mEngine.image = icon;
                     }
                 }.execute(url);
+            }
+        }
+        else if (view == mButtonAddSearchTerm) {
+            if (getActivity().getCurrentFocus() == mFieldUrl) {
+                String text = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
+                int selStart = mFieldUrl.getSelectionStart();
+                int selEnd = mFieldUrl.getSelectionEnd();
+                text = text.substring(0, selStart) + SearchEngine.SEARCH_TERM + text.substring(selEnd);
+                selEnd = selStart + SearchEngine.SEARCH_TERM.length();
+                mFieldUrl.setText(text);
+                mFieldUrl.setSelection(selEnd);
             }
         }
     }
