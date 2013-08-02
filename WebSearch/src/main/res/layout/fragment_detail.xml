@@ -6,6 +6,7 @@
               android:layout_height="match_parent">
 
     <LinearLayout android:orientation="horizontal"
+                  android:layout_marginTop="@dimen/detail_field_margin"
                   android:layout_marginBottom="@dimen/detail_field_margin"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
@@ -34,7 +35,7 @@
                   android:layout_height="wrap_content" />
 
         <ImageView android:id="@+id/buttonAddSearchTerm"
-                   android:src="@drawable/ic_new"
+                   android:src="@drawable/ic_paste"
                    android:scaleType="fitCenter"
                    android:clickable="true"
                    android:layout_marginLeft="8dp"
