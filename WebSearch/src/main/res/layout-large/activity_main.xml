@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/main_drawer_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".MainActivity">
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+
+        <fragment android:name="net.solutinno.websearch.ListFragment"
+                  android:id="@+id/fragment_list"
+                  android:layout_height="match_parent"
+                  android:layout_width="match_parent"
+                  tools:layout="@layout/fragment_list" />
+
+    </FrameLayout>
+
+    <FrameLayout android:layout_gravity="end"
+                 android:clickable="true"
+                 android:background="@color/drawer_background_color"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+
+        <fragment android:name="net.solutinno.websearch.DetailFragment"
+                  android:id="@+id/fragment_detail"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  tools:layout="@layout/fragment_detail">
+        </fragment>
+
+    </FrameLayout>
+
+</android.support.v4.widget.DrawerLayout>

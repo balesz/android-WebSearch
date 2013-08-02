@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,12 +15,14 @@ import android.widget.TextView;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
-import net.solutinno.websearch.utils.Helpers;
+import net.solutinno.websearch.listener.SelectItemListener;
+import net.solutinno.websearch.util.NetworkHelper;
+import net.solutinno.websearch.util.StringHelper;
 
 import java.net.URL;
 import java.util.UUID;
 
-public class DetailFragment extends Fragment implements View.OnClickListener {
+public class DetailFragment extends Fragment implements View.OnClickListener, SelectItemListener {
     TextView mFieldName;
     TextView mFieldUrl;
     TextView mFieldImageUrl;
@@ -35,12 +36,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String id = getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID);
-        if (id != null) {
-            mEngine = DataProvider.getSearchEngine(getActivity(), UUID.fromString(id));
-        }
-        else mEngine = new SearchEngine();
-
         mFieldName = (TextView) getView().findViewById(R.id.fieldName);
         mFieldUrl = (TextView) getView().findViewById(R.id.fieldUrl);
         mFieldImageUrl = (TextView) getView().findViewById(R.id.fieldImageUrl);
@@ -52,7 +47,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         mButtonRefreshImage.setOnClickListener(this);
         mButtonAddSearchTerm.setOnClickListener(this);
 
-        setData();
+        UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
+        onSelectItem(id);
     }
 
     @Override
@@ -61,24 +57,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_delete:
-                Delete(); break;
-            case R.id.action_save:
-                Save(); break;
-            case android.R.id.home:
-            case R.id.action_cancel:
-                Cancel(); break;
-        }
-        return true;
-    }
-
-    @Override
     public void onClick(View view) {
 
         if (view == mButtonRefreshImage) {
-            if (mFieldImageUrl.getText().toString().isEmpty()) {
+            if (StringHelper.IsNullOrEmpty(mFieldImageUrl.getText())) {
                 mFieldName.setText("Torrentz SSL");
                 mFieldUrl.setText("https://torrentz.eu/search?f={searchTerms}");
                 mFieldImageUrl.setText("http://mycroftproject.com/updateos.php/id0/torrentz_secure.ico");
@@ -86,11 +68,11 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             }
             else {
                 URL url = null;
-                try { url = new URL(mFieldImageUrl.getText().toString()); } catch (Exception ex) { }
+                try { url = new URL(StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText())); } catch (Exception ex) { ex.printStackTrace(); }
                 new AsyncTask<URL, Integer, Bitmap>() {
                     @Override
                     protected Bitmap doInBackground(URL... urls) {
-                        byte[] data = Helpers.downloadURL(urls[0]);
+                        byte[] data = NetworkHelper.DownloadURL(urls[0]);
                         return BitmapFactory.decodeByteArray(data, 0, data.length);
                     }
                     @Override
@@ -104,7 +86,16 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void ClearFields() {
+        mFieldName.setText("");
+        mFieldUrl.setText("");
+        mFieldImageUrl.setText("");
+        mFieldDescription.setText("");
+        mButtonRefreshImage.setImageResource(R.drawable.ic_refresh);
+    }
+
     private void setData() {
+        ClearFields();
         if (mEngine.id != null) {
             mFieldName.setText(mEngine.name);
             mFieldUrl.setText(mEngine.url);
@@ -118,34 +109,41 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private SearchEngine getData() {
         SearchEngine result = new SearchEngine();
         result.id = mEngine.id == null ? UUID.randomUUID() : mEngine.id;
-        result.name = mFieldName.getText().toString();
-        result.url = mFieldUrl.getText().toString();
-        result.imageUrl = mFieldImageUrl.getText().toString();
-        result.description = mFieldDescription.getText().toString();
+        result.name = StringHelper.GetStringFromCharSequence(mFieldName.getText());
+        result.url = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
+        result.imageUrl = StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText());
+        result.description = StringHelper.GetStringFromCharSequence(mFieldDescription.getText());
         result.image = mEngine.image;
         return result;
     }
 
-    private void Delete() {
-        DataProvider.deleteSearchEngine(getActivity(), getData());
-        getActivity().finish();
+    public void Cancel() {
+
     }
 
-    private void Save() {
+    public void Save() {
         if (Validate()) {
             DataProvider.updateSearchEngine(getActivity(), getData());
         }
-        getActivity().finish();
     }
 
-    private void Cancel() {
-        getActivity().finish();
+    public void Delete() {
+        DataProvider.deleteSearchEngine(getActivity(), getData());
     }
 
-    private boolean Validate() {
-        boolean result = !mFieldName.getText().toString().isEmpty();
-        result |= !mFieldUrl.getText().toString().isEmpty();
+    public boolean Validate() {
+        boolean result = !StringHelper.IsNullOrEmpty(mFieldName.getText());
+        result |= !StringHelper.IsNullOrEmpty(mFieldUrl.getText());
         return  result;
     }
 
+    @Override
+    public void onSelectItem(UUID id) {
+        if (id != null) {
+            mEngine = DataProvider.getSearchEngine(getActivity(), id);
+        }
+        else mEngine = new SearchEngine();
+
+        setData();
+    }
 }

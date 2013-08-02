@@ -1,4 +1,4 @@
-package net.solutinno.websearch.utils;
+package net.solutinno.websearch.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,9 +7,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class Helpers
+public class NetworkHelper
 {
-    public static byte[] downloadURL(URL url) {
+    public static byte[] DownloadURL(URL url) {
         if (url == null) return null;
         try {
             URLConnection connection = url.openConnection();

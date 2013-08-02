@@ -1,17 +1,19 @@
 package net.solutinno.websearch;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class DetailActivity extends ActionBarActivity {
 
+    DetailFragment mDetailFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        mDetailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
     }
 
     @Override
@@ -22,11 +24,19 @@ public class DetailActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
-        if (fragment != null) {
-            fragment.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+            case R.id.action_delete:
+                mDetailFragment.Delete();
+                break;
+            case R.id.action_save:
+                mDetailFragment.Save();
+                break;
+            case android.R.id.home:
+            case R.id.action_cancel:
+                mDetailFragment.Cancel();
+                break;
         }
+        finish();
         return true;
     }
-
 }
