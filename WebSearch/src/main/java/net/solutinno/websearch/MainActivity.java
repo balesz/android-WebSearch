@@ -89,6 +89,11 @@ public class MainActivity extends ActionBarActivity implements SelectItemListene
     }
 
     @Override
+    public void onDrawerStateChanged(int i) {
+
+    }
+
+    @Override
     public void onDrawerOpened(View view) {
         mActiveFragment = 1;
         this.onCreateOptionsMenu(mMainMenu);
@@ -104,11 +109,6 @@ public class MainActivity extends ActionBarActivity implements SelectItemListene
         mListFragment.getLoaderManager().getLoader(0).forceLoad();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
-    }
-
-    @Override
-    public void onDrawerStateChanged(int i) {
-
     }
 
     private void Add() {
