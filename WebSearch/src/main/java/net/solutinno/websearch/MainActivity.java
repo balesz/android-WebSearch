@@ -9,12 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.listener.SelectItemListener;
 
 import java.util.UUID;
 
-public class MainActivity extends ActionBarActivity implements SelectItemListener, DrawerLayout.DrawerListener {
+public class MainActivity extends ActionBarActivity {
 
     int mActiveFragment = 0;
 
@@ -31,7 +32,7 @@ public class MainActivity extends ActionBarActivity implements SelectItemListene
         setContentView(R.layout.activity_main);
 
         mListFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_list);
-        mListFragment.RegisterSelectItemListener(this);
+        mListFragment.RegisterSelectItemListener(mSelectItemListener);
 
         mDetailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
 
@@ -40,8 +41,9 @@ public class MainActivity extends ActionBarActivity implements SelectItemListene
 
         if (mHasDrawerLayout) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            mDrawerLayout.setDrawerListener(this);
+            mDrawerLayout.setDrawerListener(mDrawerListener);
             mListFragment.RegisterSelectItemListener(mDetailFragment);
+            mDetailFragment.SetDetailController(mDetailController);
         }
     }
 
@@ -59,57 +61,79 @@ public class MainActivity extends ActionBarActivity implements SelectItemListene
         switch (item.getItemId())
         {
             case R.id.action_add:
-                Add(); break;
-            case R.id.action_save:
-                Save(); break;
-            case R.id.action_delete:
-                Delete(); break;
-            case android.R.id.home:
-            case R.id.action_cancel:
-                Cancel(); break;
+                Add();
+                break;
+            default:
+                if (mHasDrawerLayout) {
+                    mDetailFragment.onOptionsItemSelected(item);
+                }
+                break;
         }
         return true;
     }
 
-    @Override
-    public void onSelectItem(UUID id) {
-        if (mHasDrawerLayout) {
-            mDrawerLayout.openDrawer(GravityCompat.END);
+    SelectItemListener mSelectItemListener = new SelectItemListener() {
+        @Override
+        public void onSelectItem(UUID id) {
+            if (mHasDrawerLayout) {
+                mDrawerLayout.openDrawer(GravityCompat.END);
+            }
+            else {
+                Intent detail = new Intent(getBaseContext(), DetailActivity.class);
+                detail.putExtra(SearchEngineCursor.COLUMN_ID, id.toString());
+                startActivityForResult(detail, 0);
+            }
         }
-        else {
-            Intent detail = new Intent(this, DetailActivity.class);
-            detail.putExtra(SearchEngineCursor.COLUMN_ID, id.toString());
-            startActivityForResult(detail, 0);
+    };
+
+    DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
+
+        @Override
+        public void onDrawerOpened(View view) {
+            mActiveFragment = 1;
+            onCreateOptionsMenu(mMainMenu);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
-    }
 
-    @Override
-    public void onDrawerSlide(View view, float v) {
+        @Override
+        public void onDrawerClosed(View view) {
+            mDetailFragment.ClearFields();
+            mActiveFragment = 0;
+            onCreateOptionsMenu(mMainMenu);
+            mListFragment.getLoaderManager().getLoader(0).forceLoad();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
 
-    }
+        @Override
+        public void onDrawerSlide(View view, float v) {
 
-    @Override
-    public void onDrawerStateChanged(int i) {
+        }
 
-    }
+        @Override
+        public void onDrawerStateChanged(int i) {
 
-    @Override
-    public void onDrawerOpened(View view) {
-        mActiveFragment = 1;
-        this.onCreateOptionsMenu(mMainMenu);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-    }
+        }
+    };
 
-    @Override
-    public void onDrawerClosed(View view) {
-        mDetailFragment.ClearFields();
-        mActiveFragment = 0;
-        this.onCreateOptionsMenu(mMainMenu);
-        mListFragment.getLoaderManager().getLoader(0).forceLoad();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(false);
-    }
+    DetailFragment.DetailController mDetailController = new DetailFragment.DetailController() {
+        @Override
+        public void OnDetailFinish(int mode, SearchEngine engine) {
+
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+
+            switch (mode)
+            {
+                case DetailFragment.MODE_CANCEL:
+                    break;
+                case DetailFragment.MODE_UPDATE:
+                    break;
+                case DetailFragment.MODE_DELETE:
+                    break;
+            }
+        }
+    };
 
     private void Add() {
         if (mHasDrawerLayout) {
@@ -121,22 +145,4 @@ public class MainActivity extends ActionBarActivity implements SelectItemListene
             startActivity(detail);
         }
     }
-
-    private void Save() {
-        if (mHasDrawerLayout) mDetailFragment.Save();
-        Cancel();
-    }
-
-    private void Delete() {
-        if (mHasDrawerLayout) mDetailFragment.Delete();
-        Cancel();
-    }
-
-    private void Cancel() {
-        if (mHasDrawerLayout) {
-            mDetailFragment.Cancel();
-            mDrawerLayout.closeDrawer(GravityCompat.END);
-        }
-    }
-
 }
