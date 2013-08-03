@@ -1,4 +1,4 @@
-package net.solutinno.websearch.listener;
+package net.solutinno.listener;
 
 import java.util.UUID;
 

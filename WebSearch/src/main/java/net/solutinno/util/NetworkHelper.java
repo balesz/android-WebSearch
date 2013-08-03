@@ -1,4 +1,4 @@
-package net.solutinno.websearch.util;
+package net.solutinno.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

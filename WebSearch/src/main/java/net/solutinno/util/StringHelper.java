@@ -1,4 +1,4 @@
-package net.solutinno.websearch.util;
+package net.solutinno.util;
 
 public class StringHelper {
 

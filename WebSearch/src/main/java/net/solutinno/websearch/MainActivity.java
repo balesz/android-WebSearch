@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import net.solutinno.websearch.data.SearchEngineCursor;
-import net.solutinno.websearch.listener.SelectItemListener;
+import net.solutinno.listener.SelectItemListener;
 
 import java.util.UUID;
 

@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
-import net.solutinno.websearch.listener.SelectItemListener;
-import net.solutinno.websearch.util.NetworkHelper;
-import net.solutinno.websearch.util.StringHelper;
+import net.solutinno.listener.SelectItemListener;
+import net.solutinno.util.NetworkHelper;
+import net.solutinno.util.StringHelper;
 
 import java.net.URL;
 import java.util.UUID;
