@@ -1,6 +1,7 @@
 package net.solutinno.websearch;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,12 +9,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import net.solutinno.util.SoftKeyboardHelper;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
@@ -24,7 +26,7 @@ import net.solutinno.util.StringHelper;
 import java.net.URL;
 import java.util.UUID;
 
-public class DetailFragment extends Fragment implements View.OnClickListener, SelectItemListener {
+public class DetailFragment extends Fragment implements SelectItemListener {
     EditText mFieldName;
     EditText mFieldUrl;
     EditText mFieldImageUrl;
@@ -33,6 +35,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Se
     ImageView mButtonAddSearchTerm;
 
     SearchEngine mEngine;
+
+    //TODO: Need to free the memory!!
+    DetailController mDetailController;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -46,8 +51,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Se
         mButtonRefreshImage = (ImageView) getView().findViewById(R.id.buttonRefreshImage);
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.buttonAddSearchTerm);
 
-        mButtonRefreshImage.setOnClickListener(this);
-        mButtonAddSearchTerm.setOnClickListener(this);
+        mButtonRefreshImage.setOnClickListener(mButtonRefreshImageClickListener);
+        mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
@@ -59,56 +64,83 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Se
     }
 
     @Override
-    public void onClick(View view) {
-
-        if (view == mButtonRefreshImage) {
-            if (StringHelper.IsNullOrEmpty(mFieldImageUrl.getText())) {
-                mFieldName.setText("Torrentz SSL");
-                mFieldUrl.setText("https://torrentz.eu/search?f={searchTerms}");
-                mFieldImageUrl.setText("http://mycroftproject.com/updateos.php/id0/torrentz_secure.ico");
-                mFieldDescription.setText("Search dozens of torrent sites");
-            }
-            else {
-                URL url = null;
-                try { url = new URL(StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText())); } catch (Exception ex) { ex.printStackTrace(); }
-                new AsyncTask<URL, Integer, Bitmap>() {
-                    @Override
-                    protected Bitmap doInBackground(URL... urls) {
-                        byte[] data = NetworkHelper.DownloadURL(urls[0]);
-                        return BitmapFactory.decodeByteArray(data, 0, data.length);
-                    }
-                    @Override
-                    protected void onPostExecute(Bitmap bitmap) {
-                        BitmapDrawable icon = new BitmapDrawable(null, Bitmap.createScaledBitmap(bitmap, 48, 48, true));
-                        mButtonRefreshImage.setImageBitmap(bitmap);
-                        mEngine.image = icon;
-                    }
-                }.execute(url);
-            }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_delete:
+                Delete();
+                break;
+            case R.id.action_save:
+                Save();
+                break;
+            case android.R.id.home:
+            case R.id.action_cancel:
+                Cancel();
+                break;
         }
-        else if (view == mButtonAddSearchTerm) {
-            if (getActivity().getCurrentFocus() == mFieldUrl) {
-                String text = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
-                int selStart = mFieldUrl.getSelectionStart();
-                int selEnd = mFieldUrl.getSelectionEnd();
-                text = text.substring(0, selStart) + SearchEngine.SEARCH_TERM + text.substring(selEnd);
-                selEnd = selStart + SearchEngine.SEARCH_TERM.length();
-                mFieldUrl.setText(text);
-                mFieldUrl.setSelection(selEnd);
-            }
-        }
+        return true;
     }
 
-    public void ClearFields() {
-        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (getActivity().getCurrentFocus() != null) {
-            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    @Override
+    public void onSelectItem(UUID id) {
+        if (id != null) {
+            mEngine = DataProvider.getSearchEngine(getActivity(), id);
         }
+        else mEngine = new SearchEngine();
+
+        setData();
+    }
+
+    View.OnClickListener mButtonAddSearchTermClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (getActivity().getCurrentFocus() != mFieldUrl) return;
+
+            String text = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
+            int selStart = mFieldUrl.getSelectionStart();
+            int selEnd = mFieldUrl.getSelectionEnd();
+            text = text.substring(0, selStart) + SearchEngine.SEARCH_TERM + text.substring(selEnd);
+            selEnd = selStart + SearchEngine.SEARCH_TERM.length();
+            mFieldUrl.setText(text);
+            mFieldUrl.setSelection(selEnd);
+        }
+    };
+
+    View.OnClickListener mButtonRefreshImageClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (StringHelper.IsNullOrEmpty(mFieldImageUrl.getText())) return;
+
+            URL url = null;
+            try { url = new URL(StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText())); } catch (Exception ex) { ex.printStackTrace(); }
+            new AsyncTask<URL, Integer, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(URL... urls) {
+                    byte[] data = NetworkHelper.DownloadURL(urls[0]);
+                    return BitmapFactory.decodeByteArray(data, 0, data.length);
+                }
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    BitmapDrawable icon = new BitmapDrawable(null, Bitmap.createScaledBitmap(bitmap, 48, 48, true));
+                    mButtonRefreshImage.setImageBitmap(bitmap);
+                    mEngine.image = icon;
+                }
+            }.execute(url);
+        }
+    };
+
+    public void SetDetailController(DetailController controller) {
+        mDetailController = controller;
+    }
+
+
+    public void ClearFields() {
         mFieldName.setText("");
         mFieldUrl.setText("");
         mFieldImageUrl.setText("");
         mFieldDescription.setText("");
         mButtonRefreshImage.setImageResource(R.drawable.ic_refresh);
+
+        SoftKeyboardHelper.CloseSoftKeyboard(getActivity());
     }
 
     private void setData() {
@@ -135,32 +167,56 @@ public class DetailFragment extends Fragment implements View.OnClickListener, Se
     }
 
     public void Cancel() {
-
+        if (mDetailController != null) {
+            mDetailController.OnDetailFinish(MODE_CANCEL, null);
+        }
     }
 
     public void Save() {
-        if (Validate()) {
+
+        boolean valid = !StringHelper.IsNullOrEmpty(mFieldName.getText());
+        valid |= !StringHelper.IsNullOrEmpty(mFieldUrl.getText());
+
+        if (valid) {
             DataProvider.updateSearchEngine(getActivity(), getData());
+        }
+
+        if (mDetailController != null) {
+            mDetailController.OnDetailFinish(MODE_UPDATE, valid ? mEngine : null);
         }
     }
 
     public void Delete() {
-        DataProvider.deleteSearchEngine(getActivity(), getData());
+
+        DialogInterface.OnClickListener click = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == DialogInterface.BUTTON_POSITIVE) {
+                    DataProvider.deleteSearchEngine(getActivity(), getData());
+                    if (mDetailController != null) {
+                        mDetailController.OnDetailFinish(MODE_DELETE, mEngine);
+                    }
+                }
+            }
+        };
+
+        new AlertDialog.Builder(getActivity())
+            .setTitle(R.string.dialog_confirmation)
+            .setMessage(R.string.confirmation_delete)
+            .setCancelable(true)
+            .setNegativeButton(R.string.no, click)
+            .setPositiveButton(R.string.yes, click)
+            .show();
     }
 
-    public boolean Validate() {
-        boolean result = !StringHelper.IsNullOrEmpty(mFieldName.getText());
-        result |= !StringHelper.IsNullOrEmpty(mFieldUrl.getText());
-        return  result;
-    }
+    public static final int MODE_DELETE     = -1;
+    public static final int MODE_CANCEL     = 0;
+    public static final int MODE_UPDATE     = 1;
 
-    @Override
-    public void onSelectItem(UUID id) {
-        if (id != null) {
-            mEngine = DataProvider.getSearchEngine(getActivity(), id);
-        }
-        else mEngine = new SearchEngine();
-
-        setData();
+    public static interface DetailController
+    {
+        void OnDetailFinish(int mode, SearchEngine engine);
     }
 }
+
+

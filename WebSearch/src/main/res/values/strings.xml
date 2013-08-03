@@ -12,5 +12,9 @@
     <string name="hint_description">Description</string>
     <string name="action_delete">Delete</string>
     <string name="test_text">Test text</string>
+    <string name="dialog_confirmation">Confirmation</string>
+    <string name="confirmation_delete">Do you want to delete the search engine?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>
