@@ -22,15 +22,19 @@ import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.listener.SelectItemListener;
 import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.StringHelper;
+import net.solutinno.websearch.provider.OpenSearchProvider;
 
 import java.net.URL;
 import java.util.UUID;
 
 public class DetailFragment extends Fragment implements SelectItemListener {
+
+    EditText mFieldImportUrl;
     EditText mFieldName;
     EditText mFieldUrl;
     EditText mFieldImageUrl;
     EditText mFieldDescription;
+    ImageView mButtonImportFromUrl;
     ImageView mButtonRefreshImage;
     ImageView mButtonAddSearchTerm;
 
@@ -43,16 +47,19 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mFieldImportUrl = (EditText) getView().findViewById(R.id.fieldImportUrl);
         mFieldName = (EditText) getView().findViewById(R.id.fieldName);
         mFieldUrl = (EditText) getView().findViewById(R.id.fieldUrl);
         mFieldImageUrl = (EditText) getView().findViewById(R.id.fieldImageUrl);
         mFieldDescription = (EditText) getView().findViewById(R.id.fieldDescription);
 
+        mButtonImportFromUrl = (ImageView) getView().findViewById(R.id.buttonImportFromUrl);
         mButtonRefreshImage = (ImageView) getView().findViewById(R.id.buttonRefreshImage);
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.buttonAddSearchTerm);
 
         mButtonRefreshImage.setOnClickListener(mButtonRefreshImageClickListener);
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
+        mButtonImportFromUrl.setOnClickListener(mButtonImportFromUrlClickListener);
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
@@ -90,6 +97,28 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         setData();
     }
 
+    View.OnClickListener mButtonImportFromUrlClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final String urlStr = StringHelper.GetStringFromCharSequence(mFieldImportUrl.getText());
+            new AsyncTask<String, Integer, SearchEngine>() {
+                @Override
+                protected SearchEngine doInBackground(String... urls) {
+                    return OpenSearchProvider.ReadOpenSearchXmlFromUrl(urls[0]);
+                }
+                @Override
+                protected void onPostExecute(SearchEngine engine) {
+                    if (engine != null) {
+                        UUID id = mEngine.id;
+                        mEngine = engine;
+                        mEngine.id = id == null ? UUID.randomUUID() : id;
+                        setData();
+                    }
+                }
+            }.execute(urlStr);
+        }
+    };
+
     View.OnClickListener mButtonAddSearchTermClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -115,7 +144,7 @@ public class DetailFragment extends Fragment implements SelectItemListener {
             new AsyncTask<URL, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(URL... urls) {
-                    byte[] data = NetworkHelper.DownloadURL(urls[0]);
+                    byte[] data = NetworkHelper.DownloadBinary(urls[0]);
                     return BitmapFactory.decodeByteArray(data, 0, data.length);
                 }
                 @Override
