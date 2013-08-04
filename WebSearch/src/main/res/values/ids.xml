@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="detail_groupTextImport" type="id" />
+    <item name="detail_groupSeparatorImport" type="id" />
+    <item name="detail_fieldImportFromUrl" type="id" />
+    <item name="detail_buttonImportFromUrl" type="id" />
+    <item name="detail_groupTextData" type="id"/>
+    <item name="detail_groupSeparatorData" type="id"/>
+    <item name="detail_fieldName" type="id"/>
+    <item name="detail_fieldUrl" type="id"/>
+    <item name="detail_buttonAddSearchTerm" type="id"/>
+    <item name="detail_fieldImageUrl" type="id"/>
+    <item name="detail_buttonRefreshImage" type="id"/>
+    <item name="detail_fieldDescription" type="id"/>
+    <item name="detail_groupSeparatorActions" type="id"/>
+</resources>

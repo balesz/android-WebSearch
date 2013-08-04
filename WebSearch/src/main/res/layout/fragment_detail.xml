@@ -1,125 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    <LinearLayout android:orientation="horizontal"
-                  android:layout_marginTop="@dimen/detail_field_margin"
-                  android:layout_marginBottom="@dimen/detail_field_margin"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
+    <!-- ################################################## -->
+    <!-- ################################################## -->
 
-        <EditText android:id="@+id/fieldImportUrl"
-                  android:hint="@string/hint_import_url"
-                  android:inputType="text|textUri"
-                  android:layout_marginBottom="@dimen/detail_field_margin"
-                  android:layout_weight="1"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
+    <TextView
+        android:id="@id/detail_groupTextImport"
+        android:text="IMPORT" android:textColor="@color/dark_blue" android:textStyle="bold"
+        android:paddingLeft="@dimen/group_text_horizontal_padding"
+        android:paddingBottom="@dimen/group_text_vertical_padding"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <TextView
+        android:id="@id/detail_groupSeparatorImport"
+        android:background="@color/dark_blue"
+        android:layout_below="@id/detail_groupTextImport"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="2dp" />
 
-        <ImageView android:id="@+id/buttonImportFromUrl"
-                   android:src="@drawable/ic_refresh"
-                   android:scaleType="fitCenter"
-                   android:clickable="true"
-                   android:layout_marginLeft="8dp"
-                   android:layout_marginRight="8dp"
-                   android:layout_gravity="center"
-                   android:layout_weight="0"
-                   android:layout_width="32dp"
-                   android:layout_height="32dp"/>
+    <!-- ################################################## -->
+    <!-- ################################################## -->
 
-    </LinearLayout>
+    <EditText
+        android:id="@id/detail_fieldImportFromUrl"
+        android:hint="@string/hint_import_url"
+        android:inputType="text|textUri"
+        android:paddingRight="32dp"
+        android:layout_below="@id/detail_groupSeparatorImport"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@id/detail_buttonImportFromUrl"
+        android:src="@drawable/ic_refresh"
+        android:scaleType="fitCenter" android:clickable="true"
+        android:layout_below="@id/detail_groupSeparatorImport"
+        android:layout_alignRight="@id/detail_fieldImportFromUrl"
+        android:layout_width="32dp" android:layout_height="32dp"/>
 
-    <View android:layout_width="match_parent"
-          android:layout_height="2dp"
-          android:background="@color/divider_color" />
+    <!-- ################################################## -->
+    <!-- ################################################## -->
 
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
+    <TextView
+        android:id="@id/detail_groupTextData"
+        android:text="DATA" android:textColor="@color/dark_blue" android:textStyle="bold"
+        android:paddingLeft="@dimen/group_text_horizontal_padding"
+        android:paddingBottom="@dimen/group_text_vertical_padding"
+        android:layout_below="@id/detail_fieldImportFromUrl"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <TextView
+        android:id="@id/detail_groupSeparatorData"
+        android:background="@color/dark_blue"
+        android:layout_below="@id/detail_groupTextData"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="2dp" />
 
-        <LinearLayout android:orientation="horizontal"
-                      android:layout_marginBottom="@dimen/detail_field_margin"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content">
+    <!-- ################################################## -->
+    <!-- ################################################## -->
 
-            <EditText android:id="@+id/fieldName"
-                      android:hint="@string/hint_name"
-                      android:inputType="text|textCapWords"
-                      android:layout_marginBottom="@dimen/detail_field_margin"
-                      android:layout_weight="1"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content" />
+    <EditText
+        android:id="@id/detail_fieldName"
+        android:hint="@string/hint_name" android:inputType="text|textCapWords"
+        android:layout_below="@id/detail_groupSeparatorData"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
 
-        </LinearLayout>
+    <!-- ################################################## -->
 
-        <LinearLayout android:orientation="horizontal"
-                      android:layout_marginBottom="@dimen/detail_field_margin"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content">
+    <EditText
+        android:id="@id/detail_fieldUrl"
+        android:hint="@string/hint_url" android:inputType="text|textUri"
+        android:paddingRight="32dp"
+        android:layout_below="@id/detail_fieldName"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@id/detail_buttonAddSearchTerm"
+        android:src="@drawable/ic_paste"
+        android:scaleType="fitCenter" android:clickable="true"
+        android:layout_below="@id/detail_fieldName"
+        android:layout_alignRight="@id/detail_fieldUrl"
+        android:layout_width="32dp" android:layout_height="32dp"/>
 
-            <EditText android:id="@+id/fieldUrl"
-                      android:hint="@string/hint_url"
-                      android:inputType="text|textUri"
-                      android:layout_marginBottom="@dimen/detail_field_margin"
-                      android:layout_weight="1"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content" />
+    <!-- ################################################## -->
 
-            <ImageView android:id="@+id/buttonAddSearchTerm"
-                       android:src="@drawable/ic_paste"
-                       android:scaleType="fitCenter"
-                       android:clickable="true"
-                       android:layout_marginLeft="8dp"
-                       android:layout_marginRight="8dp"
-                       android:layout_gravity="center"
-                       android:layout_weight="0"
-                       android:layout_width="32dp"
-                       android:layout_height="32dp"/>
+    <EditText
+        android:id="@id/detail_fieldImageUrl"
+        android:hint="@string/hint_image" android:inputType="text|textUri"
+        android:paddingRight="32dp"
+        android:layout_below="@id/detail_fieldUrl"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@id/detail_buttonRefreshImage"
+        android:src="@drawable/ic_refresh"
+        android:scaleType="fitCenter" android:clickable="true"
+        android:layout_below="@id/detail_fieldUrl"
+        android:layout_alignRight="@id/detail_fieldImageUrl"
+        android:layout_width="32dp" android:layout_height="32dp"/>
 
-        </LinearLayout>
+    <!-- ################################################## -->
 
-        <LinearLayout android:orientation="horizontal"
-                      android:layout_marginBottom="@dimen/detail_field_margin"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content">
+    <EditText
+        android:id="@id/detail_fieldDescription"
+        android:hint="@string/hint_description"
+        android:inputType="text|textCapSentences"
+        android:singleLine="false" android:lines="3"
+        android:layout_below="@id/detail_fieldImageUrl"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
 
-            <EditText android:id="@+id/fieldImageUrl"
-                      android:hint="@string/hint_image"
-                      android:inputType="text|textUri"
-                      android:layout_weight="1"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+    <!-- ################################################## -->
+    <!-- ################################################## -->
 
-            <ImageView android:id="@+id/buttonRefreshImage"
-                       android:src="@drawable/ic_refresh"
-                       android:scaleType="fitCenter"
-                       android:clickable="true"
-                       android:layout_marginLeft="8dp"
-                       android:layout_marginRight="8dp"
-                       android:layout_gravity="center"
-                       android:layout_weight="0"
-                       android:layout_width="32dp"
-                       android:layout_height="32dp"/>
+    <TextView
+        android:id="@id/detail_groupSeparatorActions"
+        android:background="@color/dark_blue"
+        android:layout_below="@id/detail_fieldDescription"
+        android:layout_marginTop="@dimen/field_vertical_margin"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="2dp" />
 
-        </LinearLayout>
+    <!-- ################################################## -->
+    <!-- ################################################## -->
 
-        <LinearLayout android:orientation="horizontal"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content">
-
-            <EditText android:id="@+id/fieldDescription"
-                      android:hint="@string/hint_description"
-                      android:inputType="text|textCapSentences"
-                      android:singleLine="false"
-                      android:lines="3"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

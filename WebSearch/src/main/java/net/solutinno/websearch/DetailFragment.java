@@ -47,15 +47,15 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mFieldImportUrl = (EditText) getView().findViewById(R.id.fieldImportUrl);
-        mFieldName = (EditText) getView().findViewById(R.id.fieldName);
-        mFieldUrl = (EditText) getView().findViewById(R.id.fieldUrl);
-        mFieldImageUrl = (EditText) getView().findViewById(R.id.fieldImageUrl);
-        mFieldDescription = (EditText) getView().findViewById(R.id.fieldDescription);
+        mFieldImportUrl = (EditText) getView().findViewById(R.id.detail_fieldImportFromUrl);
+        mFieldName = (EditText) getView().findViewById(R.id.detail_fieldName);
+        mFieldUrl = (EditText) getView().findViewById(R.id.detail_fieldUrl);
+        mFieldImageUrl = (EditText) getView().findViewById(R.id.detail_fieldImageUrl);
+        mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
 
-        mButtonImportFromUrl = (ImageView) getView().findViewById(R.id.buttonImportFromUrl);
-        mButtonRefreshImage = (ImageView) getView().findViewById(R.id.buttonRefreshImage);
-        mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.buttonAddSearchTerm);
+        mButtonImportFromUrl = (ImageView) getView().findViewById(R.id.detail_buttonImportFromUrl);
+        mButtonRefreshImage = (ImageView) getView().findViewById(R.id.detail_buttonRefreshImage);
+        mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
 
         mButtonRefreshImage.setOnClickListener(mButtonRefreshImageClickListener);
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);

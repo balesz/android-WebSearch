@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="drawer_background_color">#ffffffff</color>
-    <color name="divider_color">#0099CC</color>
+    <color name="dark_blue">#0099CC</color>
+    <color name="light_blue">#33B5E5</color>
 </resources>
