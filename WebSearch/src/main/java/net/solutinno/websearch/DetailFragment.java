@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import net.solutinno.util.DrawableHelper;
 import net.solutinno.websearch.data.DataProvider;
@@ -63,9 +65,9 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         mButtonImport = (Button) getView().findViewById(R.id.detail_buttonImport);
         mButtonLoadImage = (Button) getView().findViewById(R.id.detail_buttonLoadImage);
 
-        mButtonLoadImage.setOnClickListener(mButtonRefreshImageClickListener);
+        mButtonLoadImage.setOnClickListener(mButtonLoadImageClickListener);
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
-        mButtonImport.setOnClickListener(mButtonImportFromUrlClickListener);
+        mButtonImport.setOnClickListener(mButtonImportClickListener);
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
@@ -103,10 +105,14 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         setData();
     }
 
-    View.OnClickListener mButtonImportFromUrlClickListener = new View.OnClickListener() {
+    View.OnClickListener mButtonImportClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             final String urlStr = StringHelper.GetStringFromCharSequence(mFieldImportUrl.getText());
+            if (!Patterns.WEB_URL.matcher(urlStr).matches()) {
+                Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
+                return;
+            }
             new AsyncTask<String, Integer, SearchEngine>() {
                 @Override
                 protected SearchEngine doInBackground(String... urls) {
@@ -119,6 +125,7 @@ public class DetailFragment extends Fragment implements SelectItemListener {
                         mEngine = engine;
                         mEngine.id = id == null ? UUID.randomUUID() : id;
                         setData();
+                        mButtonLoadImageClickListener.onClick(null);
                     }
                 }
             }.execute(urlStr);
@@ -140,13 +147,15 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         }
     };
 
-    View.OnClickListener mButtonRefreshImageClickListener = new View.OnClickListener() {
+    View.OnClickListener mButtonLoadImageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (StringHelper.IsNullOrEmpty(mFieldImageUrl.getText())) return;
-
-            URL url = null;
-            try { url = new URL(StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText())); } catch (Exception ex) { ex.printStackTrace(); }
+            final URL url;
+            try { url = new URL(StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText())); }
+            catch (Exception ex) {
+                Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
+                return;
+            }
             new AsyncTask<URL, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(URL... urls) {
@@ -184,14 +193,17 @@ public class DetailFragment extends Fragment implements SelectItemListener {
             mFieldName.setText(mEngine.name);
             mFieldUrl.setText(mEngine.url);
             mFieldImageUrl.setText(mEngine.imageUrl);
-            Bitmap bmp = BitmapFactory.decodeFile(mEngine.imageUri.getPath());
-            if (bmp != null) {
-                ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-                BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
-                actionBar.setIcon(icon);
+            mFieldDescription.setText(mEngine.description);
+            if (mEngine.imageUri != null) {
+                Bitmap bmp = BitmapFactory.decodeFile(mEngine.imageUri.getPath());
+                if (bmp != null) {
+                    ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+                    BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
+                    actionBar.setIcon(icon);
+                }
+                else ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
             }
             else ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
-            mFieldDescription.setText(mEngine.description);
         }
     }
 
@@ -213,8 +225,10 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     }
 
     public void Save() {
-        boolean valid = !StringHelper.IsNullOrEmpty(mFieldName.getText());
-        valid |= !StringHelper.IsNullOrEmpty(mFieldUrl.getText());
+        String url = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
+        boolean valid = !StringHelper.IsNullOrEmpty(mFieldName.getText())
+            || !StringHelper.IsNullOrEmpty(url)
+            || Patterns.WEB_URL.matcher(url.replace(SearchEngine.SEARCH_TERM, "")).matches();
 
         if (valid) {
             DataProvider.updateSearchEngine(getActivity(), getData());

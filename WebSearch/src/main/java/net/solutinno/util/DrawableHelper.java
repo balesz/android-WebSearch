@@ -9,7 +9,7 @@ public class DrawableHelper
     public static Drawable GetDrawableFromBitmap(Bitmap bitmap, int... dimension) {
         if (bitmap == null) return null;
         BitmapDrawable result;
-        if (dimension == null) result = new BitmapDrawable(null, bitmap);
+        if (dimension == null || dimension.length < 2) result = new BitmapDrawable(null, bitmap);
         else result = new BitmapDrawable(null, Bitmap.createScaledBitmap(bitmap, dimension[0], dimension[1], true));
         return result;
     }

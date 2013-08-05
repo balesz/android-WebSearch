@@ -17,5 +17,6 @@
     <string name="confirmation_delete">Do you want to delete the search engine?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="error_invalid_url">The URL is invalid!</string>
 
 </resources>
