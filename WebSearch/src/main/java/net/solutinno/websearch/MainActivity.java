@@ -1,5 +1,6 @@
 package net.solutinno.websearch;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import net.solutinno.util.SoftKeyboardHelper;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.listener.SelectItemListener;
@@ -51,8 +53,14 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         if (mMainMenu == null) mMainMenu = menu;
-        if (mActiveFragment == 0) getMenuInflater().inflate(R.menu.main, mMainMenu);
-        else getMenuInflater().inflate(R.menu.detail, mMainMenu);
+        if (mActiveFragment == 0) {
+            getSupportActionBar().setIcon(R.drawable.ic_launcher);
+            getSupportActionBar().setTitle(R.string.app_name);
+            getMenuInflater().inflate(R.menu.main, mMainMenu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.detail, mMainMenu);
+        }
         return super.onCreateOptionsMenu(mMainMenu);
     }
 
@@ -86,6 +94,10 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    private Activity getActivity() {
+        return this;
+    }
+
     DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
 
         @Override
@@ -104,16 +116,15 @@ public class MainActivity extends ActionBarActivity {
             mListFragment.getLoaderManager().getLoader(0).forceLoad();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
+            SoftKeyboardHelper.CloseSoftKeyboard(getActivity());
         }
 
         @Override
         public void onDrawerSlide(View view, float v) {
-
         }
 
         @Override
         public void onDrawerStateChanged(int i) {
-
         }
     };
 

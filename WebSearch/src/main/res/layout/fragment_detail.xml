@@ -2,10 +2,12 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="true" android:focusableInTouchMode="true"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:focusable="true" android:focusableInTouchMode="true"
         android:layout_width="match_parent" android:layout_height="wrap_content">
 
         <!-- ################################################## -->
@@ -27,23 +29,13 @@
             android:layout_width="match_parent" android:layout_height="2dp" />
 
         <!-- ################################################## -->
-        <!-- ################################################## -->
 
         <EditText
             android:id="@id/detail_fieldImportFromUrl"
             android:hint="@string/hint_import_url"
             android:inputType="text|textUri"
-            android:paddingRight="32dp"
             android:layout_below="@id/detail_groupSeparatorImport"
             android:layout_width="match_parent" android:layout_height="wrap_content" />
-        <ImageView
-            android:id="@id/detail_buttonImportFromUrl"
-            android:visibility="invisible"
-            android:src="@drawable/ic_refresh"
-            android:scaleType="fitCenter" android:clickable="true"
-            android:layout_below="@id/detail_groupSeparatorImport"
-            android:layout_alignRight="@id/detail_fieldImportFromUrl"
-            android:layout_width="32dp" android:layout_height="32dp"/>
         <Button
             android:id="@id/detail_buttonImport"
             android:text="Import from Url"
@@ -68,7 +60,6 @@
             android:layout_marginBottom="@dimen/field_vertical_margin"
             android:layout_width="match_parent" android:layout_height="2dp" />
 
-        <!-- ################################################## -->
         <!-- ################################################## -->
 
         <EditText
@@ -112,18 +103,9 @@
         <EditText
             android:id="@id/detail_fieldImageUrl"
             android:hint="@string/hint_image" android:inputType="text|textUri"
-            android:paddingRight="32dp"
             android:layout_below="@id/detail_fieldDescription"
             android:layout_marginBottom="@dimen/field_vertical_margin"
             android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        <ImageView
-            android:id="@id/detail_buttonRefreshImage"
-            android:visibility="invisible"
-            android:src="@drawable/ic_refresh"
-            android:scaleType="fitCenter" android:clickable="true"
-            android:layout_below="@id/detail_fieldDescription"
-            android:layout_alignRight="@id/detail_fieldImageUrl"
-            android:layout_width="32dp" android:layout_height="32dp"/>
         <Button
             android:id="@id/detail_buttonLoadImage"
             android:text="Load image from Url"
@@ -140,9 +122,6 @@
             android:layout_marginTop="@dimen/field_vertical_margin"
             android:layout_marginBottom="@dimen/field_vertical_margin"
             android:layout_width="match_parent" android:layout_height="2dp" />
-
-        <!-- ################################################## -->
-        <!-- ################################################## -->
 
     </RelativeLayout>
 

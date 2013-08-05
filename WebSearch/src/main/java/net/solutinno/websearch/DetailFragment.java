@@ -8,14 +8,17 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import net.solutinno.util.SoftKeyboardHelper;
+import net.solutinno.util.DrawableHelper;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
@@ -29,14 +32,17 @@ import java.util.UUID;
 
 public class DetailFragment extends Fragment implements SelectItemListener {
 
+    private final int ICON_WIDTH = 48;
+    private final int ICON_HEIGHT = 48;
+
     EditText mFieldImportUrl;
     EditText mFieldName;
     EditText mFieldUrl;
     EditText mFieldImageUrl;
     EditText mFieldDescription;
-    ImageView mButtonImportFromUrl;
-    ImageView mButtonRefreshImage;
     ImageView mButtonAddSearchTerm;
+    Button mButtonImport;
+    Button mButtonLoadImage;
 
     SearchEngine mEngine;
 
@@ -53,13 +59,13 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         mFieldImageUrl = (EditText) getView().findViewById(R.id.detail_fieldImageUrl);
         mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
 
-        mButtonImportFromUrl = (ImageView) getView().findViewById(R.id.detail_buttonImportFromUrl);
-        mButtonRefreshImage = (ImageView) getView().findViewById(R.id.detail_buttonRefreshImage);
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
+        mButtonImport = (Button) getView().findViewById(R.id.detail_buttonImport);
+        mButtonLoadImage = (Button) getView().findViewById(R.id.detail_buttonLoadImage);
 
-        mButtonRefreshImage.setOnClickListener(mButtonRefreshImageClickListener);
+        mButtonLoadImage.setOnClickListener(mButtonRefreshImageClickListener);
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
-        mButtonImportFromUrl.setOnClickListener(mButtonImportFromUrlClickListener);
+        mButtonImport.setOnClickListener(mButtonImportFromUrlClickListener);
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
@@ -149,8 +155,9 @@ public class DetailFragment extends Fragment implements SelectItemListener {
                 }
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
-                    BitmapDrawable icon = new BitmapDrawable(null, Bitmap.createScaledBitmap(bitmap, 48, 48, true));
-                    mButtonRefreshImage.setImageBitmap(bitmap);
+                    ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+                    BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
+                    actionBar.setIcon(icon);
                     mEngine.image = icon;
                 }
             }.execute(url);
@@ -167,9 +174,8 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         mFieldUrl.setText("");
         mFieldImageUrl.setText("");
         mFieldDescription.setText("");
-        mButtonRefreshImage.setImageResource(R.drawable.ic_refresh);
-
-        SoftKeyboardHelper.CloseSoftKeyboard(getActivity());
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle("");
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
     }
 
     private void setData() {
@@ -179,7 +185,12 @@ public class DetailFragment extends Fragment implements SelectItemListener {
             mFieldUrl.setText(mEngine.url);
             mFieldImageUrl.setText(mEngine.imageUrl);
             Bitmap bmp = BitmapFactory.decodeFile(mEngine.imageUri.getPath());
-            if (bmp != null) mButtonRefreshImage.setImageBitmap(bmp);
+            if (bmp != null) {
+                ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+                BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
+                actionBar.setIcon(icon);
+            }
+            else ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
             mFieldDescription.setText(mEngine.description);
         }
     }
@@ -202,7 +213,6 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     }
 
     public void Save() {
-
         boolean valid = !StringHelper.IsNullOrEmpty(mFieldName.getText());
         valid |= !StringHelper.IsNullOrEmpty(mFieldUrl.getText());
 
@@ -216,7 +226,6 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     }
 
     public void Delete() {
-
         DialogInterface.OnClickListener click = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
