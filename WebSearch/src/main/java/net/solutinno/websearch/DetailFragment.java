@@ -179,6 +179,7 @@ public class DetailFragment extends Fragment implements SelectItemListener {
 
 
     public void ClearFields() {
+        mFieldImportUrl.setText("");
         mFieldName.setText("");
         mFieldUrl.setText("");
         mFieldImageUrl.setText("");
