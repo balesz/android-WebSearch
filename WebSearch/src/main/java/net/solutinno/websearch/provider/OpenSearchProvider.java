@@ -1,93 +1,47 @@
 package net.solutinno.websearch.provider;
 
-import android.util.Patterns;
-
 import net.solutinno.util.NetworkHelper;
-import net.solutinno.util.StringHelper;
+import net.solutinno.util.UrlHelper;
 import net.solutinno.websearch.data.SearchEngine;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
 
-import java.io.ByteArrayInputStream;
 import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
 public class OpenSearchProvider
 {
-    private static Document getXmlDocument(String url) {
-        Document result;
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            String content = NetworkHelper.DownloadText(new URL(url));
-            if (StringHelper.IsNullOrEmpty(content)) throw new Exception("Download error!");
-
-            result = documentBuilder.parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
-            if (result == null) throw new Exception("Xml parse error!");
-
-            return result;
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    private static Document getHtmlHead(String url) {
-        Document result;
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            String content = NetworkHelper.DownloadText(new URL(url));
-            if (StringHelper.IsNullOrEmpty(content)) throw new Exception("Download error!");
-
-            content = content.substring(content.indexOf("<head>"), content.indexOf("</head>")) + "</head>";
-
-            result = documentBuilder.parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
-            if (result == null) throw new Exception("Xml parse error!");
-
-            return result;
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     public static SearchEngine GetEngine(String url) {
         SearchEngine result = null;
         try {
-            Document doc = getXmlDocument(url);
+            if (!UrlHelper.IsUrlValid(url)) return null;
 
-            if (doc != null) {
-                if (IsOpenSearchXml(doc)) {
-                    result = ReadOpenSearchXml(doc);
-                    return result;
-                }
+            String content = NetworkHelper.DownloadText(new URL(url));
+
+            if (content == null) throw new Exception("Download is failed!");
+
+            HtmlCleaner cleaner = new HtmlCleaner();
+            TagNode root = cleaner.clean(content);
+
+            if (IsOpenSearchXml(root)) {
+                result = ReadOpenSearchXml(root);
+                return result;
             }
 
-            doc = getHtmlHead(url);
-            String osUrl = SearchOpenSearchXml(doc);
+            String osUrl = SearchOpenSearchXml(root);
 
             if (osUrl != null) {
 
-                if (!Patterns.WEB_URL.matcher(osUrl).matches()) {
+                if (!UrlHelper.IsUrlValid(osUrl)) {
                     URL srcUrl = new URL(url);
                     osUrl = srcUrl.getProtocol() + "://" + srcUrl.getHost() + osUrl;
                 }
 
-                doc = getXmlDocument(osUrl);
+                content = NetworkHelper.DownloadText(new URL(osUrl));
+                root = cleaner.clean(content);
 
-                if (IsOpenSearchXml(doc)) {
-                    result = ReadOpenSearchXml(doc);
+                if (IsOpenSearchXml(root)) {
+                    result = ReadOpenSearchXml(root);
                     return result;
                 }
             }
@@ -98,15 +52,10 @@ public class OpenSearchProvider
         return result;
     }
 
-    public static boolean IsOpenSearchXml(Document doc) {
+    public static boolean IsOpenSearchXml(TagNode root) {
         try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath path = factory.newXPath();
-
-            Node node = (Node) path.evaluate("OpenSearchDescription", doc, XPathConstants.NODE);
-            if (node == null) throw new Exception("This document is not an OpenSearch markup xml!");
-
-            return true;
+            Object[] nodes = root.evaluateXPath("//OpenSearchDescription");
+            return nodes != null && nodes.length > 0;
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -114,15 +63,10 @@ public class OpenSearchProvider
         }
     }
 
-    public static String SearchOpenSearchXml(Document doc) {
+    public static String SearchOpenSearchXml(TagNode root) {
         try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath path = factory.newXPath();
-
-            Node node = (Node) path.evaluate("//link[@rel='search'][@type='application/opensearchdescription+xml']/@href", doc, XPathConstants.NODE);
-            if (node == null) throw new Exception("The OpenSearchDescription typed link tag is not found!");
-
-            return node.getTextContent();
+            Object[] nodes = root.evaluateXPath("//link[@rel='search'][@type='application/opensearchdescription+xml']/@href");
+            return String.valueOf(nodes == null || nodes.length < 1 ? null : nodes[0]);
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -130,26 +74,20 @@ public class OpenSearchProvider
         }
     }
 
-    public static SearchEngine ReadOpenSearchXml(Document doc) {
+    public static SearchEngine ReadOpenSearchXml(TagNode root) {
         SearchEngine result = new SearchEngine();
         try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath path = factory.newXPath();
+            Object[] nodes = root.evaluateXPath("//ShortName");
+            result.name = String.valueOf(nodes == null || nodes.length < 1 ? null : ((TagNode)nodes[0]).getText());
 
-            Node root = (Node) path.evaluate("OpenSearchDescription", doc, XPathConstants.NODE);
-            if (root == null) throw new Exception("The OpenSearchDescription node is not found!");
+            nodes = root.evaluateXPath("//Description");
+            result.description = String.valueOf(nodes == null || nodes.length < 1 ? null : ((TagNode)nodes[0]).getText());
 
-            Node node = (Node) path.evaluate("ShortName", root, XPathConstants.NODE);
-            result.name = node == null ? null : node.getTextContent();
+            nodes = root.evaluateXPath("//Image");
+            result.imageUrl = String.valueOf(nodes == null || nodes.length < 1 ? null : ((TagNode)nodes[0]).getText());
 
-            node = (Node) path.evaluate("Description", root, XPathConstants.NODE);
-            result.description = node == null ? null : node.getTextContent();
-
-            node = (Node) path.evaluate("Image", root, XPathConstants.NODE);
-            result.imageUrl = node == null ? null : node.getTextContent();
-
-            node = (Node) path.evaluate("Url[@type='text/html']/@template", root, XPathConstants.NODE);
-            result.url = node == null ? null : node.getTextContent();
+            nodes = root.evaluateXPath("//Url[@type='text/html']/@template");
+            result.url = String.valueOf(nodes == null || nodes.length < 1 ? null : nodes[0]);
 
             return result;
         }

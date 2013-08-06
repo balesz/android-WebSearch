@@ -10,6 +10,12 @@
         android:focusable="true" android:focusableInTouchMode="true"
         android:layout_width="match_parent" android:layout_height="wrap_content">
 
+        <ProgressBar
+            android:id="@id/detail_progressBar"
+            android:visibility="gone"
+            android:layout_centerInParent="true" android:layout_alignParentStart="true"
+            android:layout_width="match_parent" android:layout_height="match_parent" />
+
         <!-- ################################################## -->
         <!-- ################################################## -->
 

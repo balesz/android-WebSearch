@@ -15,4 +15,5 @@
     <item name="detail_groupSeparatorActions" type="id"/>
     <item name="detail_buttonImport" type="id"/>
     <item name="detail_buttonLoadImage" type="id"/>
+    <item name="detail_progressBar" type="id"/>
 </resources>

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import net.solutinno.util.DrawableHelper;
+import net.solutinno.util.UrlHelper;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
@@ -46,6 +47,8 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     Button mButtonImport;
     Button mButtonLoadImage;
 
+    ProgressBar mProgressBar;
+
     SearchEngine mEngine;
 
     //TODO: Need to free the memory!!
@@ -54,6 +57,8 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mProgressBar = (ProgressBar) getView().findViewById(R.id.detail_progressBar);
 
         mFieldImportUrl = (EditText) getView().findViewById(R.id.detail_fieldImportFromUrl);
         mFieldName = (EditText) getView().findViewById(R.id.detail_fieldName);
@@ -109,10 +114,11 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         @Override
         public void onClick(View view) {
             final String urlStr = StringHelper.GetStringFromCharSequence(mFieldImportUrl.getText());
-            if (!Patterns.WEB_URL.matcher(urlStr).matches()) {
+            if (!UrlHelper.IsUrlValid(urlStr)) {
                 Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
                 return;
             }
+            mProgressBar.setVisibility(View.VISIBLE);
             new AsyncTask<String, Integer, SearchEngine>() {
                 @Override
                 protected SearchEngine doInBackground(String... urls) {
@@ -127,6 +133,7 @@ public class DetailFragment extends Fragment implements SelectItemListener {
                         setData();
                         mButtonLoadImageClickListener.onClick(null);
                     }
+                    mProgressBar.setVisibility(View.GONE);
                 }
             }.execute(urlStr);
         }
@@ -229,7 +236,7 @@ public class DetailFragment extends Fragment implements SelectItemListener {
         String url = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
         boolean valid = !StringHelper.IsNullOrEmpty(mFieldName.getText())
             || !StringHelper.IsNullOrEmpty(url)
-            || Patterns.WEB_URL.matcher(url.replace(SearchEngine.SEARCH_TERM, "")).matches();
+            || UrlHelper.IsUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""));
 
         if (valid) {
             DataProvider.updateSearchEngine(getActivity(), getData());
