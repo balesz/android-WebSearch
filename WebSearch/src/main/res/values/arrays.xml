@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="search_engines">
+        <item>http://en.wikipedia.org/w/opensearch_desc.php</item>
+        <item>https://github.com/opensearch.xml</item>
+        <item>http://stackoverflow.com/opensearch.xml</item>
+        <item>http://thepiratebay.sx/opensearch.xml</item>
+        <item>http://torrentz.ph/opensearch.xml</item>
+        <item>http://kickass.to/opensearch.xml</item>
+    </string-array>
+</resources>

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<SearchEngine>>, AdapterView.OnItemClickListener {
+public class ListFragment extends Fragment {
 
     ListView mListView;
     SimpleCursorAdapter mAdapter;
@@ -36,7 +36,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         View result = inflater.inflate(R.layout.fragment_list, container, false);
         if (result != null) {
             mListView = (ListView) result.findViewById(R.id.listView);
-            mListView.setOnItemClickListener(this);
+            mListView.setOnItemClickListener(mItemClickListener);
         }
 
         return result;
@@ -60,36 +60,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             });
         }
 
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        SearchEngineCursor cursor = (SearchEngineCursor)mAdapter.getCursor();
-        UUID id = UUID.fromString(cursor.getString(cursor.getColumnIndex(SearchEngineCursor.COLUMN_ID)));
-
-        if (mSelectItemListeners != null) {
-            for (SelectItemListener listener : mSelectItemListeners) listener.onSelectItem(id);
-        }
-    }
-
-    @Override
-    public Loader<List<SearchEngine>> onCreateLoader(int i, Bundle bundle) {
-        return new SearchEngineLoader(getActivity());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<SearchEngine>> listLoader, List<SearchEngine> searchEngines) {
-        if (mAdapter != null) {
-            mAdapter.changeCursor(SearchEngineCursor.createBySearchEngineList(searchEngines));
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<SearchEngine>> listLoader) {
-        if (mAdapter != null) {
-            mAdapter.changeCursor(null);
-        }
+        getLoaderManager().initLoader(0, null, mLoaderCallbacks);
     }
 
     public void RegisterSelectItemListener(SelectItemListener listener) {
@@ -97,4 +68,36 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         mSelectItemListeners.add(listener);
     }
 
+    AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            SearchEngineCursor cursor = (SearchEngineCursor)mAdapter.getCursor();
+            UUID id = UUID.fromString(cursor.getString(cursor.getColumnIndex(SearchEngineCursor.COLUMN_ID)));
+
+            if (mSelectItemListeners != null) {
+                for (SelectItemListener listener : mSelectItemListeners) listener.onSelectItem(id);
+            }
+        }
+    };
+
+    LoaderManager.LoaderCallbacks<List<SearchEngine>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<List<SearchEngine>>() {
+        @Override
+        public Loader<List<SearchEngine>> onCreateLoader(int i, Bundle bundle) {
+            return new SearchEngineLoader(getActivity());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<SearchEngine>> listLoader, List<SearchEngine> searchEngines) {
+            if (mAdapter != null) {
+                mAdapter.changeCursor(SearchEngineCursor.createBySearchEngineList(searchEngines));
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<SearchEngine>> listLoader) {
+            if (mAdapter != null) {
+                mAdapter.changeCursor(null);
+            }
+        }
+    };
 }

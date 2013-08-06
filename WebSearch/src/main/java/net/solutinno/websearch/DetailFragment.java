@@ -248,6 +248,11 @@ public class DetailFragment extends Fragment implements SelectItemListener {
     }
 
     public void Delete() {
+        if (mEngine.id == null) {
+            DataProvider.deleteSearchEngine(getActivity(), getData());
+            return;
+        }
+
         DialogInterface.OnClickListener click = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

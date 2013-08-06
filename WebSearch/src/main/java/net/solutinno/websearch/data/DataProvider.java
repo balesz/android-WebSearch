@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 
 import net.solutinno.websearch.Application;
+import net.solutinno.websearch.R;
+import net.solutinno.websearch.provider.OpenSearchProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +17,20 @@ import java.util.UUID;
 
 public class DataProvider
 {
+    public static void fillDatabase(Context context) {
+        Database db = new Database(context);
+        if (db.engine.countOf() > 0) return;
+        String[] engines = context.getResources().getStringArray(R.array.search_engines);
+        for (String engine : engines) {
+            SearchEngine se = OpenSearchProvider.GetEngine(engine);
+            if (se != null) {
+                se.id = UUID.randomUUID();
+                db.engine.create(se);
+            }
+        }
+        db.close();
+    }
+
     public static List<SearchEngine> getSearchEngines(Context context) {
         Database db = new Database(context);
         List<SearchEngine> result = null;
@@ -24,7 +40,7 @@ public class DataProvider
                 item.imageUri = Uri.fromFile(new File(Application.cacheDir, item.id + ".png"));
             }
         }
-        catch (SQLException e) { }
+        catch (SQLException e) { e.printStackTrace(); }
         db.close();
         return result;
     }
@@ -57,11 +73,11 @@ public class DataProvider
         db.close();
     }
 
-    public static void deleteSearchEngine(Context context, SearchEngine engine) {
+    public static boolean deleteSearchEngine(Context context, SearchEngine engine) {
         Database db = new Database(context);
         db.engine.deleteById(engine.id);
         db.close();
-        new File(Application.cacheDir, engine.id + ".png").delete();
+        return new File(Application.cacheDir, engine.id + ".png").delete();
     }
 
 }

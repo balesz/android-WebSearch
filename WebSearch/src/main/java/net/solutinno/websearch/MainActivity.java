@@ -80,6 +80,10 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    private Activity getActivity() {
+        return this;
+    }
+
     SelectItemListener mSelectItemListener = new SelectItemListener() {
         @Override
         public void onSelectItem(UUID id) {
@@ -93,10 +97,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
-
-    private Activity getActivity() {
-        return this;
-    }
 
     DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
 
