@@ -116,7 +116,7 @@ public class DetailFragment extends Fragment implements SelectItemListener {
             new AsyncTask<String, Integer, SearchEngine>() {
                 @Override
                 protected SearchEngine doInBackground(String... urls) {
-                    return OpenSearchProvider.ReadOpenSearchXmlFromUrl(urls[0]);
+                    return OpenSearchProvider.GetEngine(urls[0]);
                 }
                 @Override
                 protected void onPostExecute(SearchEngine engine) {
