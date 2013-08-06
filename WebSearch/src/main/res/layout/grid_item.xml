@@ -10,8 +10,8 @@
     <ImageView android:id="@+id/share_item_image"
                android:src="@drawable/ic_launcher"
                android:layout_gravity="center"
-               android:layout_width="32dp"
-               android:layout_height="32dp"/>
+               android:layout_width="16dp"
+               android:layout_height="16dp"/>
 
     <TextView android:id="@+id/share_item_text"
               android:text="@string/test_text"
