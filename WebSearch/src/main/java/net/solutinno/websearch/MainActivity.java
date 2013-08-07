@@ -2,6 +2,7 @@ package net.solutinno.websearch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -48,10 +49,10 @@ public class MainActivity extends ActionBarActivity {
             mListFragment.RegisterSelectItemListener(mDetailFragment);
             mDetailFragment.SetDetailController(mDetailController);
 
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            int orientation = getResources().getConfiguration().orientation;
             final View detail = mDrawerLayout.getChildAt(1);
-            if (detail != null) {
+            if (detail != null && orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 ViewGroup.LayoutParams layoutParams = detail.getLayoutParams();
                 if (layoutParams != null) {
                     layoutParams.width = (metrics.widthPixels / 3) * 2;
