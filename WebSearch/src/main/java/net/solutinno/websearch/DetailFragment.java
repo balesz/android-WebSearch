@@ -263,7 +263,12 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     public void Delete() {
         if (mEngine.id == null) {
-            DataProvider.deleteSearchEngine(getActivity(), getData());
+            if (mDetailController != null) {
+                final DetailController detailController = mDetailController.get();
+                if (detailController != null) {
+                    detailController.OnDetailFinish(MODE_DELETE, mEngine);
+                }
+            }
             return;
         }
 
