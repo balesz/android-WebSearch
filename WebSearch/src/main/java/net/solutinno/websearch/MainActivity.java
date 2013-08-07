@@ -13,7 +13,6 @@ import android.view.View;
 import net.solutinno.util.SoftKeyboardHelper;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
-import net.solutinno.listener.SelectItemListener;
 
 import java.util.UUID;
 
@@ -84,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
         return this;
     }
 
-    SelectItemListener mSelectItemListener = new SelectItemListener() {
+    ListFragment.SelectItemListener mSelectItemListener = new ListFragment.SelectItemListener() {
         @Override
         public void onSelectItem(UUID id) {
             if (mHasDrawerLayout) {

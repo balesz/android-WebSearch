@@ -16,7 +16,6 @@ import android.widget.ListView;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.websearch.data.SearchEngineLoader;
-import net.solutinno.listener.SelectItemListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,4 +99,10 @@ public class ListFragment extends Fragment {
             }
         }
     };
+
+    public static interface SelectItemListener
+    {
+        void onSelectItem(UUID id);
+    }
 }
+

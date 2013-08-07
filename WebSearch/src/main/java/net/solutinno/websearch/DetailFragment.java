@@ -25,7 +25,6 @@ import net.solutinno.util.UrlHelper;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
-import net.solutinno.listener.SelectItemListener;
 import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.StringHelper;
 import net.solutinno.websearch.provider.OpenSearchProvider;
@@ -33,7 +32,7 @@ import net.solutinno.websearch.provider.OpenSearchProvider;
 import java.net.URL;
 import java.util.UUID;
 
-public class DetailFragment extends Fragment implements SelectItemListener {
+public class DetailFragment extends Fragment implements ListFragment.SelectItemListener {
 
     private final int ICON_WIDTH = 48;
     private final int ICON_HEIGHT = 48;
