@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import net.solutinno.util.SoftKeyboardHelper;
 import net.solutinno.websearch.data.SearchEngine;
@@ -45,6 +47,17 @@ public class MainActivity extends ActionBarActivity {
             mDrawerLayout.setDrawerListener(mDrawerListener);
             mListFragment.RegisterSelectItemListener(mDetailFragment);
             mDetailFragment.SetDetailController(mDetailController);
+
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            final View detail = mDrawerLayout.getChildAt(1);
+            if (detail != null) {
+                ViewGroup.LayoutParams layoutParams = detail.getLayoutParams();
+                if (layoutParams != null) {
+                    layoutParams.width = (metrics.widthPixels / 3) * 2;
+                    detail.setLayoutParams(layoutParams);
+                }
+            }
         }
     }
 

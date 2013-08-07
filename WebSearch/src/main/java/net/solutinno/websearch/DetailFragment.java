@@ -29,6 +29,7 @@ import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.StringHelper;
 import net.solutinno.websearch.provider.OpenSearchProvider;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.UUID;
 
@@ -50,8 +51,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     SearchEngine mEngine;
 
-    //TODO: Need to free the memory!!
-    DetailController mDetailController;
+    WeakReference<DetailController> mDetailController;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -80,6 +80,15 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_detail, container, false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDetailController != null) {
+            mDetailController.clear();
+            mDetailController = null;
+        }
     }
 
     @Override
@@ -179,10 +188,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         }
     };
 
-    public void SetDetailController(DetailController controller) {
-        mDetailController = controller;
-    }
 
+    public void SetDetailController(DetailController controller) {
+        mDetailController = new WeakReference<DetailController>(controller);
+    }
 
     public void ClearFields() {
         mFieldImportUrl.setText("");
@@ -227,7 +236,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     public void Cancel() {
         if (mDetailController != null) {
-            mDetailController.OnDetailFinish(MODE_CANCEL, null);
+            final DetailController detailController = mDetailController.get();
+            if (detailController != null) {
+                detailController.OnDetailFinish(MODE_CANCEL, null);
+            }
         }
     }
 
@@ -242,7 +254,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         }
 
         if (mDetailController != null) {
-            mDetailController.OnDetailFinish(MODE_UPDATE, valid ? mEngine : null);
+            final DetailController detailController = mDetailController.get();
+            if (detailController != null) {
+                detailController.OnDetailFinish(MODE_UPDATE, valid ? mEngine : null);
+            }
         }
     }
 
@@ -258,7 +273,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
                 if (i == DialogInterface.BUTTON_POSITIVE) {
                     DataProvider.deleteSearchEngine(getActivity(), getData());
                     if (mDetailController != null) {
-                        mDetailController.OnDetailFinish(MODE_DELETE, mEngine);
+                        final DetailController detailController = mDetailController.get();
+                        if (detailController != null) {
+                            detailController.OnDetailFinish(MODE_DELETE, mEngine);
+                        }
                     }
                 }
             }
