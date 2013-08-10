@@ -18,5 +18,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error_invalid_url">The URL is invalid!</string>
+    <string name="action_import">Import</string>
+    <string name="caption_import">Import</string>
+    <string name="caption_cancel">Cancel</string>
 
 </resources>

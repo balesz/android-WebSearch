@@ -1,7 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_import"
+          android:icon="@drawable/ic_import_export"
+          android:title="@string/action_import"
+          yourapp:showAsAction="always" />
+
     <item android:id="@+id/action_add"
           android:icon="@drawable/ic_new"
           android:title="@string/action_add"
           yourapp:showAsAction="always"/>
+
 </menu>

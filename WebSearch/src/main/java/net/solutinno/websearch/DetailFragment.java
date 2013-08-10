@@ -27,7 +27,6 @@ import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.StringHelper;
-import net.solutinno.websearch.provider.OpenSearchProvider;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -38,13 +37,11 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     private final int ICON_WIDTH = 48;
     private final int ICON_HEIGHT = 48;
 
-    EditText mFieldImportUrl;
     EditText mFieldName;
     EditText mFieldUrl;
     EditText mFieldImageUrl;
     EditText mFieldDescription;
     ImageView mButtonAddSearchTerm;
-    Button mButtonImport;
     Button mButtonLoadImage;
 
     ProgressBar mProgressBar;
@@ -59,19 +56,16 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
         mProgressBar = (ProgressBar) getView().findViewById(R.id.detail_progressBar);
 
-        mFieldImportUrl = (EditText) getView().findViewById(R.id.detail_fieldImportFromUrl);
         mFieldName = (EditText) getView().findViewById(R.id.detail_fieldName);
         mFieldUrl = (EditText) getView().findViewById(R.id.detail_fieldUrl);
         mFieldImageUrl = (EditText) getView().findViewById(R.id.detail_fieldImageUrl);
         mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
 
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
-        mButtonImport = (Button) getView().findViewById(R.id.detail_buttonImport);
         mButtonLoadImage = (Button) getView().findViewById(R.id.detail_buttonLoadImage);
 
         mButtonLoadImage.setOnClickListener(mButtonLoadImageClickListener);
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
-        mButtonImport.setOnClickListener(mButtonImportClickListener);
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
@@ -117,35 +111,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
         setData();
     }
-
-    View.OnClickListener mButtonImportClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            final String urlStr = StringHelper.GetStringFromCharSequence(mFieldImportUrl.getText());
-            if (!UrlHelper.IsUrlValid(urlStr)) {
-                Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
-                return;
-            }
-            mProgressBar.setVisibility(View.VISIBLE);
-            new AsyncTask<String, Integer, SearchEngine>() {
-                @Override
-                protected SearchEngine doInBackground(String... urls) {
-                    return OpenSearchProvider.GetEngine(urls[0]);
-                }
-                @Override
-                protected void onPostExecute(SearchEngine engine) {
-                    if (engine != null) {
-                        UUID id = mEngine.id;
-                        mEngine = engine;
-                        mEngine.id = id == null ? UUID.randomUUID() : id;
-                        setData();
-                        mButtonLoadImageClickListener.onClick(null);
-                    }
-                    mProgressBar.setVisibility(View.GONE);
-                }
-            }.execute(urlStr);
-        }
-    };
 
     View.OnClickListener mButtonAddSearchTermClickListener = new View.OnClickListener() {
         @Override
@@ -194,7 +159,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     }
 
     public void ClearFields() {
-        mFieldImportUrl.setText("");
         mFieldName.setText("");
         mFieldUrl.setText("");
         mFieldImageUrl.setText("");

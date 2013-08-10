@@ -8,6 +8,8 @@
 
     <style name="ShareTheme" parent="android:Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:drawable/screen_background_light</item>
+        <item name="android:textAppearanceSmall">@android:style/TextAppearance.Small.Inverse</item>
     </style>
 
 </resources>

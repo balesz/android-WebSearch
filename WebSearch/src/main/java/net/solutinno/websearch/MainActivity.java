@@ -84,6 +84,11 @@ public class MainActivity extends ActionBarActivity {
             case R.id.action_add:
                 Add();
                 break;
+            case R.id.action_import:
+                ImportFragment fragment = ImportFragment.newInstance();
+                fragment.setOnImportDialogResult(mOnImportDialogResult);
+                fragment.show(getSupportFragmentManager(), "import");
+                break;
             default:
                 if (mHasDrawerLayout) {
                     mDetailFragment.onOptionsItemSelected(item);
@@ -96,6 +101,15 @@ public class MainActivity extends ActionBarActivity {
     private Activity getActivity() {
         return this;
     }
+
+    ImportFragment.ImportDialogResult mOnImportDialogResult = new ImportFragment.ImportDialogResult() {
+        @Override
+        public void OnDialogResult(int result) {
+            if (result > 0) {
+                mListFragment.getLoaderManager().getLoader(0).forceLoad();
+            }
+        }
+    };
 
     ListFragment.SelectItemListener mSelectItemListener = new ListFragment.SelectItemListener() {
         @Override
