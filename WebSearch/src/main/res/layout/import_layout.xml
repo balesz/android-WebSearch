@@ -5,17 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@id/detail_progressBar"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
     <EditText
         android:id="@id/detail_fieldImportFromUrl"
         android:hint="@string/hint_import_url"
         android:inputType="text|textUri"
         android:layout_marginTop="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@id/detail_progressBar"
+        android:visibility="invisible"
+        android:indeterminateOnly="true"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_below="@id/detail_fieldImportFromUrl"
         android:layout_width="match_parent" android:layout_height="wrap_content" />
 
 </RelativeLayout>
