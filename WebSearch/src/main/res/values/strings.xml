@@ -21,5 +21,6 @@
     <string name="action_import">Import</string>
     <string name="caption_import">Import</string>
     <string name="caption_cancel">Cancel</string>
+    <string name="information_image_download_successfull">The image downloaded successfully!</string>
 
 </resources>

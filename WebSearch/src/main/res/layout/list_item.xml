@@ -8,7 +8,7 @@
               android:layout_height="wrap_content">
 
     <ImageView android:id="@+id/item_icon"
-               android:src="@drawable/ic_refresh"
+               android:src="@drawable/ic_picture"
                android:layout_gravity="center"
                android:layout_width="16dp"
                android:layout_height="16dp"/>

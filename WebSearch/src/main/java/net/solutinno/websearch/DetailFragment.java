@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -42,7 +42,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     EditText mFieldImageUrl;
     EditText mFieldDescription;
     ImageView mButtonAddSearchTerm;
-    Button mButtonLoadImage;
+    ImageView mButtonLoadImage;
 
     ProgressBar mProgressBar;
 
@@ -62,10 +62,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
 
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
-        mButtonLoadImage = (Button) getView().findViewById(R.id.detail_buttonLoadImage);
+        mButtonLoadImage = (ImageView) getView().findViewById(R.id.detail_buttonLoadImage);
 
-        mButtonLoadImage.setOnClickListener(mButtonLoadImageClickListener);
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
+        mButtonLoadImage.setOnClickListener(mButtonLoadImageClickListener);
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
@@ -144,6 +144,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
                 }
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
+                    Toast.makeText(getActivity(), R.string.information_image_download_successfull, Toast.LENGTH_LONG).show();
                     ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
                     BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
                     actionBar.setIcon(icon);
@@ -167,26 +168,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
     }
 
-    private void setData() {
-        ClearFields();
-        if (mEngine.id != null) {
-            mFieldName.setText(mEngine.name);
-            mFieldUrl.setText(mEngine.url);
-            mFieldImageUrl.setText(mEngine.imageUrl);
-            mFieldDescription.setText(mEngine.description);
-            if (mEngine.imageUri != null) {
-                Bitmap bmp = BitmapFactory.decodeFile(mEngine.imageUri.getPath());
-                if (bmp != null) {
-                    ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-                    BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
-                    actionBar.setIcon(icon);
-                }
-                else ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
-            }
-            else ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
-        }
-    }
-
     private SearchEngine getData() {
         SearchEngine result = new SearchEngine();
         result.id = mEngine.id == null ? UUID.randomUUID() : mEngine.id;
@@ -198,13 +179,41 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         return result;
     }
 
-    public void Cancel() {
+    private void setData() {
+        ClearFields();
+        if (mEngine.id != null) {
+            mFieldName.setText(mEngine.name);
+            mFieldUrl.setText(mEngine.url);
+            mFieldImageUrl.setText(mEngine.imageUrl);
+            mFieldDescription.setText(mEngine.description);
+            setImageFromUri(mEngine.imageUri);
+        }
+    }
+
+    private void setImageFromUri(Uri uri) {
+        if (uri != null) {
+            Bitmap bmp = BitmapFactory.decodeFile(uri.getPath());
+            if (bmp != null) {
+                ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+                BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
+                actionBar.setIcon(icon);
+                return;
+            }
+        }
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
+    }
+
+    private void onDetailFinish(int mode) {
         if (mDetailController != null) {
             final DetailController detailController = mDetailController.get();
             if (detailController != null) {
-                detailController.OnDetailFinish(MODE_CANCEL, null);
+                detailController.OnDetailFinish(mode, mEngine);
             }
         }
+    }
+
+    public void Cancel() {
+        onDetailFinish(MODE_CANCEL);
     }
 
     public void Save() {
@@ -214,25 +223,16 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
             || UrlHelper.IsUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""));
 
         if (valid) {
+            mEngine = getData();
             DataProvider.updateSearchEngine(getActivity(), getData());
         }
 
-        if (mDetailController != null) {
-            final DetailController detailController = mDetailController.get();
-            if (detailController != null) {
-                detailController.OnDetailFinish(MODE_UPDATE, valid ? mEngine : null);
-            }
-        }
+        onDetailFinish(MODE_UPDATE);
     }
 
     public void Delete() {
         if (mEngine.id == null) {
-            if (mDetailController != null) {
-                final DetailController detailController = mDetailController.get();
-                if (detailController != null) {
-                    detailController.OnDetailFinish(MODE_DELETE, mEngine);
-                }
-            }
+            onDetailFinish(MODE_DELETE);
             return;
         }
 
@@ -241,12 +241,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == DialogInterface.BUTTON_POSITIVE) {
                     DataProvider.deleteSearchEngine(getActivity(), getData());
-                    if (mDetailController != null) {
-                        final DetailController detailController = mDetailController.get();
-                        if (detailController != null) {
-                            detailController.OnDetailFinish(MODE_DELETE, mEngine);
-                        }
-                    }
+                    onDetailFinish(MODE_DELETE);
                 }
             }
         };

@@ -16,4 +16,5 @@
     <item name="detail_buttonImport" type="id"/>
     <item name="detail_buttonLoadImage" type="id"/>
     <item name="detail_progressBar" type="id"/>
+    <item name="detail_fieldImage" type="id"/>
 </resources>
