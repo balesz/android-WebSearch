@@ -89,10 +89,11 @@ public class ImportFragment extends DialogFragment
                 }
                 @Override
                 protected void onPostExecute(SearchEngine engine) {
+                    Toast.makeText(getActivity(), engine == null ? R.string.information_import_unsuccesfull : R.string.information_import_succesfull, Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.GONE);
                     if (engine != null) {
                         DataProvider.updateSearchEngine(getActivity(), engine);
                         onImportDialogFinish();
-                        mProgressBar.setVisibility(View.GONE);
                         dismiss();
                     }
                 }

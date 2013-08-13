@@ -22,5 +22,7 @@
     <string name="caption_import">Import</string>
     <string name="caption_cancel">Cancel</string>
     <string name="information_image_download_successfull">The image downloaded successfully!</string>
+    <string name="information_import_unsuccesfull">The import was unsuccessfull!</string>
+    <string name="information_import_succesfull">The import was successfull!</string>
 
 </resources>
