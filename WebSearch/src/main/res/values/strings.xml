@@ -24,5 +24,10 @@
     <string name="information_image_download_successfull">The image downloaded successfully!</string>
     <string name="information_import_unsuccesfull">The import was unsuccessfull!</string>
     <string name="information_import_succesfull">The import was successfull!</string>
+    <string name="error_name_required">The Name field is required!</string>
+    <string name="error_url_required">The Url field is required!</string>
+    <string name="error_url_invalid">The Url field is invalid!</string>
+    <string name="error_url_missing_term">The search term pattern is missing from the Url field!
+    </string>
 
 </resources>

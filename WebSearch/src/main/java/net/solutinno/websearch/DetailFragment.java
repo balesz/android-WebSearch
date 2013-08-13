@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     private final int ICON_WIDTH = 48;
     private final int ICON_HEIGHT = 48;
 
+    Drawable mBackgroundField;
     EditText mFieldName;
     EditText mFieldUrl;
     EditText mFieldImageUrl;
@@ -60,6 +62,8 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         mFieldUrl = (EditText) getView().findViewById(R.id.detail_fieldUrl);
         mFieldImageUrl = (EditText) getView().findViewById(R.id.detail_fieldImageUrl);
         mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
+
+        mBackgroundField = mFieldName.getBackground();
 
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
         mButtonLoadImage = (ImageView) getView().findViewById(R.id.detail_buttonLoadImage);
@@ -216,18 +220,47 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         onDetailFinish(MODE_CANCEL);
     }
 
-    public void Save() {
+    private boolean isValid() {
         String url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
-        boolean valid = !StringHelper.isNullOrEmpty(mFieldName.getText())
-            || !StringHelper.isNullOrEmpty(url)
-            || UrlHelper.isUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""));
+        String name = StringHelper.getStringFromCharSequence(mFieldName.getText());
 
-        if (valid) {
-            mEngine = getData();
-            DataProvider.updateSearchEngine(getActivity(), getData());
+        if (StringHelper.isNullOrEmpty(name)) {
+            Toast.makeText(getActivity(), R.string.error_name_required, Toast.LENGTH_SHORT).show();
+            mFieldName.setBackgroundResource(R.color.light_red);
+            return false;
         }
+        else mFieldName.setBackgroundDrawable(mBackgroundField);
 
-        onDetailFinish(MODE_UPDATE);
+        if (StringHelper.isNullOrEmpty(url)) {
+            Toast.makeText(getActivity(), R.string.error_url_required, Toast.LENGTH_SHORT).show();
+            mFieldUrl.setBackgroundResource(R.color.light_red);
+            return false;
+        }
+        else mFieldUrl.setBackgroundDrawable(mBackgroundField);
+
+        if (!UrlHelper.isUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""))) {
+            Toast.makeText(getActivity(), R.string.error_url_invalid, Toast.LENGTH_SHORT).show();
+            mFieldUrl.setBackgroundResource(R.color.light_red);
+            return false;
+        }
+        else mFieldUrl.setBackgroundDrawable(mBackgroundField);
+
+        if (!url.contains(SearchEngine.SEARCH_TERM)) {
+            Toast.makeText(getActivity(), R.string.error_url_missing_term, Toast.LENGTH_SHORT).show();
+            mFieldUrl.setBackgroundResource(R.color.light_red);
+            return false;
+        }
+        else mFieldUrl.setBackgroundDrawable(mBackgroundField);
+
+        return true;
+    }
+
+    public void Save() {
+        if (isValid()) {
+            mEngine = getData();
+            DataProvider.updateSearchEngine(getActivity(), mEngine);
+            onDetailFinish(MODE_UPDATE);
+        }
     }
 
     public void Delete() {

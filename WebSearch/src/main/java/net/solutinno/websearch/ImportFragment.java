@@ -63,6 +63,12 @@ public class ImportFragment extends DialogFragment
         fieldUrl.setText(mUrl);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mOnImportDialogResult = null;
+    }
+
     public void setOnImportDialogResult(ImportDialogResult onImportDialogResult) {
         mOnImportDialogResult = onImportDialogResult;
     }
