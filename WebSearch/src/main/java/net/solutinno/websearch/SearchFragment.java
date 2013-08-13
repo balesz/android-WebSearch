@@ -42,7 +42,7 @@ public class SearchFragment extends DialogFragment
         assert searchGrid != null;
         searchGrid.setOnItemClickListener(onItemClickListener);
 
-        SearchEngineCursor cursor = SearchEngineCursor.createBySearchEngineList(DataProvider.getSearchEngines(getActivity()));
+        SearchEngineCursor cursor = SearchEngineCursor.createBySearchEngineList(DataProvider.getSearchEngineList(getActivity()));
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_search, cursor, SearchEngineCursor.GRID_FIELDS, SearchEngineCursor.GRID_UI_FIELDS, 0);
         searchGrid.setAdapter(adapter);
 

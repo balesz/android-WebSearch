@@ -31,7 +31,7 @@ public class DataProvider
         db.close();
     }
 
-    public static List<SearchEngine> getSearchEngines(Context context) {
+    public static List<SearchEngine> getSearchEngineList(Context context) {
         Database db = new Database(context);
         List<SearchEngine> result = null;
         try {

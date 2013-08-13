@@ -76,8 +76,8 @@ public class ImportFragment extends DialogFragment
         public void onClick(View view) {
             final EditText mFieldImportUrl = (EditText) mContent.findViewById(R.id.detail_fieldImportFromUrl);
             final ProgressBar mProgressBar = (ProgressBar) mContent.findViewById(R.id.detail_progressBar);
-            final String urlStr = StringHelper.GetStringFromCharSequence(mFieldImportUrl.getText());
-            if (!UrlHelper.IsUrlValid(urlStr)) {
+            final String urlStr = StringHelper.getStringFromCharSequence(mFieldImportUrl.getText());
+            if (!UrlHelper.isUrlValid(urlStr)) {
                 Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
                 return;
             }

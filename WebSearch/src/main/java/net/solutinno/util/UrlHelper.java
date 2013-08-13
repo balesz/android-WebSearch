@@ -4,7 +4,7 @@ import java.net.URL;
 
 public class UrlHelper
 {
-    public static boolean IsUrlValid(String url) {
+    public static boolean isUrlValid(String url) {
         try { new URL(url); return true; } catch (Exception ex) { return false; }
     }
 }

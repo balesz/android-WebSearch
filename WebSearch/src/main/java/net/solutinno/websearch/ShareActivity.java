@@ -14,7 +14,7 @@ public class ShareActivity extends ActionBarActivity {
 
         String searchTerm = getIntent().getStringExtra(Intent.EXTRA_TEXT);
 
-        if (UrlHelper.IsUrlValid(searchTerm)) {
+        if (UrlHelper.isUrlValid(searchTerm)) {
             ImportFragment fragment = ImportFragment.newInstance(searchTerm);
             fragment.setOnImportDialogResult(new ImportFragment.ImportDialogResult() {
                 @Override

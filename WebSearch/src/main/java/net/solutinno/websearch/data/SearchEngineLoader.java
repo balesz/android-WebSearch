@@ -15,11 +15,11 @@ public class SearchEngineLoader extends AsyncTaskLoader<List<SearchEngine>>
 
     @Override
     public List<SearchEngine> loadInBackground() {
-        List<SearchEngine> result = DataProvider.getSearchEngines(getContext());
+        List<SearchEngine> result = DataProvider.getSearchEngineList(getContext());
         if (result.isEmpty()) {
             //TODO: I have to put this call somewhere I can show progressbar!
             DataProvider.fillDatabase(getContext());
-            result = DataProvider.getSearchEngines(getContext());
+            result = DataProvider.getSearchEngineList(getContext());
         }
         return result;
     }
@@ -72,7 +72,7 @@ public class SearchEngineLoader extends AsyncTaskLoader<List<SearchEngine>>
         releaseResources(data);
     }
 
-    void releaseResources(List<SearchEngine> data) {
+    private void releaseResources(List<SearchEngine> data) {
         if (data == null) return;
         data.clear();
     }

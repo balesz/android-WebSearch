@@ -117,7 +117,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         public void onClick(View view) {
             if (getActivity().getCurrentFocus() != mFieldUrl) return;
 
-            String text = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
+            String text = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
             int selStart = mFieldUrl.getSelectionStart();
             int selEnd = mFieldUrl.getSelectionEnd();
             text = text.substring(0, selStart) + SearchEngine.SEARCH_TERM + text.substring(selEnd);
@@ -131,7 +131,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         @Override
         public void onClick(View view) {
             final URL url;
-            try { url = new URL(StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText())); }
+            try { url = new URL(StringHelper.getStringFromCharSequence(mFieldImageUrl.getText())); }
             catch (Exception ex) {
                 Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
                 return;
@@ -139,14 +139,14 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
             new AsyncTask<URL, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(URL... urls) {
-                    byte[] data = NetworkHelper.DownloadBinary(urls[0]);
+                    byte[] data = NetworkHelper.downloadIntoByteArray(urls[0]);
                     return BitmapFactory.decodeByteArray(data, 0, data.length);
                 }
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     Toast.makeText(getActivity(), R.string.information_image_download_successfull, Toast.LENGTH_LONG).show();
                     ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-                    BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
+                    BitmapDrawable icon = (BitmapDrawable) DrawableHelper.getDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
                     actionBar.setIcon(icon);
                     mEngine.image = icon;
                 }
@@ -171,10 +171,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     private SearchEngine getData() {
         SearchEngine result = new SearchEngine();
         result.id = mEngine.id == null ? UUID.randomUUID() : mEngine.id;
-        result.name = StringHelper.GetStringFromCharSequence(mFieldName.getText());
-        result.url = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
-        result.imageUrl = StringHelper.GetStringFromCharSequence(mFieldImageUrl.getText());
-        result.description = StringHelper.GetStringFromCharSequence(mFieldDescription.getText());
+        result.name = StringHelper.getStringFromCharSequence(mFieldName.getText());
+        result.url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
+        result.imageUrl = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
+        result.description = StringHelper.getStringFromCharSequence(mFieldDescription.getText());
         result.image = mEngine.image;
         return result;
     }
@@ -195,7 +195,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
             Bitmap bmp = BitmapFactory.decodeFile(uri.getPath());
             if (bmp != null) {
                 ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-                BitmapDrawable icon = (BitmapDrawable) DrawableHelper.GetDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
+                BitmapDrawable icon = (BitmapDrawable) DrawableHelper.getDrawableFromBitmap(bmp, ICON_WIDTH, ICON_HEIGHT);
                 actionBar.setIcon(icon);
                 return;
             }
@@ -217,10 +217,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     }
 
     public void Save() {
-        String url = StringHelper.GetStringFromCharSequence(mFieldUrl.getText());
-        boolean valid = !StringHelper.IsNullOrEmpty(mFieldName.getText())
-            || !StringHelper.IsNullOrEmpty(url)
-            || UrlHelper.IsUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""));
+        String url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
+        boolean valid = !StringHelper.isNullOrEmpty(mFieldName.getText())
+            || !StringHelper.isNullOrEmpty(url)
+            || UrlHelper.isUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""));
 
         if (valid) {
             mEngine = getData();

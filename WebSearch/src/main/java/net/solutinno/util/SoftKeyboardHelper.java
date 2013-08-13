@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 
 public class SoftKeyboardHelper
 {
-    public static void CloseSoftKeyboard(Activity activity) {
+    public static void closeSoftKeyboard(Activity activity) {
         if (activity == null) return;
         InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View currentView = activity.getCurrentFocus();

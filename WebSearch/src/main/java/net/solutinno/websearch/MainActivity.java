@@ -143,7 +143,7 @@ public class MainActivity extends ActionBarActivity {
             mListFragment.getLoaderManager().getLoader(0).forceLoad();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
-            SoftKeyboardHelper.CloseSoftKeyboard(getActivity());
+            SoftKeyboardHelper.closeSoftKeyboard(getActivity());
         }
 
         @Override

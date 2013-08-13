@@ -14,9 +14,9 @@ public class OpenSearchProvider
     public static SearchEngine GetEngine(String url) {
         SearchEngine result = null;
         try {
-            if (!UrlHelper.IsUrlValid(url)) return null;
+            if (!UrlHelper.isUrlValid(url)) return null;
 
-            String content = NetworkHelper.DownloadText(new URL(url));
+            String content = NetworkHelper.downloadIntoText(new URL(url));
 
             if (content == null) throw new Exception("Download is failed!");
 
@@ -32,12 +32,12 @@ public class OpenSearchProvider
 
             if (osUrl != null) {
 
-                if (!UrlHelper.IsUrlValid(osUrl)) {
+                if (!UrlHelper.isUrlValid(osUrl)) {
                     URL srcUrl = new URL(url);
                     osUrl = srcUrl.getProtocol() + "://" + srcUrl.getHost() + osUrl;
                 }
 
-                content = NetworkHelper.DownloadText(new URL(osUrl));
+                content = NetworkHelper.downloadIntoText(new URL(osUrl));
                 root = cleaner.clean(content);
 
                 if (IsOpenSearchXml(root)) {

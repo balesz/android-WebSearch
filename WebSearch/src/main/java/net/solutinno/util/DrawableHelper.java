@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 
 public class DrawableHelper
 {
-    public static Drawable GetDrawableFromBitmap(Bitmap bitmap, int... dimension) {
+    public static Drawable getDrawableFromBitmap(Bitmap bitmap, int... dimension) {
         if (bitmap == null) return null;
         BitmapDrawable result;
         if (dimension == null || dimension.length < 2) result = new BitmapDrawable(null, bitmap);
