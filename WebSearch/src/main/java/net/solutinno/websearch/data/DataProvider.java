@@ -22,7 +22,7 @@ public class DataProvider
         if (db.engine.countOf() > 0) return;
         String[] engines = context.getResources().getStringArray(R.array.search_engines);
         for (String engine : engines) {
-            SearchEngine se = OpenSearchProvider.GetEngine(engine);
+            SearchEngine se = new OpenSearchProvider(engine).GetEngine();
             if (se != null) {
                 se.id = UUID.randomUUID();
                 db.engine.create(se);

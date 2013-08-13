@@ -1,5 +1,6 @@
 package net.solutinno.websearch;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -65,9 +66,9 @@ public class ImportFragment extends DialogFragment
     public void setOnImportDialogResult(ImportDialogResult onImportDialogResult) {
         mOnImportDialogResult = onImportDialogResult;
     }
-    private void onImportDialogFinish() {
+    private void onImportDialogFinish(int result) {
         if (mOnImportDialogResult != null) {
-            mOnImportDialogResult.OnDialogResult(0);
+            mOnImportDialogResult.OnDialogResult(result);
         }
     }
 
@@ -85,7 +86,7 @@ public class ImportFragment extends DialogFragment
             new AsyncTask<String, Integer, SearchEngine>() {
                 @Override
                 protected SearchEngine doInBackground(String... urls) {
-                    return OpenSearchProvider.GetEngine(urls[0]);
+                    return new OpenSearchProvider(urls[0]).GetEngine();
                 }
                 @Override
                 protected void onPostExecute(SearchEngine engine) {
@@ -93,7 +94,7 @@ public class ImportFragment extends DialogFragment
                     mProgressBar.setVisibility(View.GONE);
                     if (engine != null) {
                         DataProvider.updateSearchEngine(getActivity(), engine);
-                        onImportDialogFinish();
+                        onImportDialogFinish(Activity.RESULT_OK);
                         dismiss();
                     }
                 }
@@ -104,7 +105,7 @@ public class ImportFragment extends DialogFragment
     private View.OnClickListener mNegativeOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            onImportDialogFinish();
+            onImportDialogFinish(Activity.RESULT_CANCELED);
             dismiss();
         }
     };

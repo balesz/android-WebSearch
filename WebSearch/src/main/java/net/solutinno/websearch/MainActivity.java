@@ -105,7 +105,7 @@ public class MainActivity extends ActionBarActivity {
     ImportFragment.ImportDialogResult mOnImportDialogResult = new ImportFragment.ImportDialogResult() {
         @Override
         public void OnDialogResult(int result) {
-            if (result > 0) {
+            if (result == Activity.RESULT_OK) {
                 mListFragment.getLoaderManager().getLoader(0).forceLoad();
             }
         }
