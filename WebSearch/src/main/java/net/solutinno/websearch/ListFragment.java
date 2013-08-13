@@ -46,7 +46,7 @@ public class ListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (mListView != null) {
-            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
+            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.item_list, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
             mListView.setAdapter(mAdapter);
             mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                 @Override

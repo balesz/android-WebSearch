@@ -17,4 +17,6 @@
     <item name="detail_buttonLoadImage" type="id"/>
     <item name="detail_progressBar" type="id"/>
     <item name="detail_fieldImage" type="id"/>
+    <item name="search_content" type="id"/>
+    <item name="search_grid" type="id"/>
 </resources>

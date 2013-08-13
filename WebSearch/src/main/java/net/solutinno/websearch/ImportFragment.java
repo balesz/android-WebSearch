@@ -21,6 +21,7 @@ import net.solutinno.websearch.provider.OpenSearchProvider;
 
 public class ImportFragment extends DialogFragment
 {
+    String mUrl;
     private RelativeLayout mContent;
     private ImportDialogResult mOnImportDialogResult;
 
@@ -28,9 +29,15 @@ public class ImportFragment extends DialogFragment
         return new ImportFragment();
     }
 
+    public static ImportFragment newInstance(String url) {
+        ImportFragment result = new ImportFragment();
+        result.mUrl = url;
+        return result;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mContent = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.import_layout, null);
+        mContent = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.fragment_import, null);
         return new AlertDialog.Builder(getActivity())
             .setTitle(R.string.action_import)
             .setView(mContent)
@@ -50,10 +57,18 @@ public class ImportFragment extends DialogFragment
         button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         assert button != null;
         button.setOnClickListener(mNegativeOnClick);
+
+        EditText fieldUrl = (EditText) mContent.findViewById(R.id.detail_fieldImportFromUrl);
+        fieldUrl.setText(mUrl);
     }
 
     public void setOnImportDialogResult(ImportDialogResult onImportDialogResult) {
         mOnImportDialogResult = onImportDialogResult;
+    }
+    private void onImportDialogFinish() {
+        if (mOnImportDialogResult != null) {
+            mOnImportDialogResult.OnDialogResult(0);
+        }
     }
 
     private View.OnClickListener mPositiveOnClick = new View.OnClickListener() {
@@ -76,7 +91,7 @@ public class ImportFragment extends DialogFragment
                 protected void onPostExecute(SearchEngine engine) {
                     if (engine != null) {
                         DataProvider.updateSearchEngine(getActivity(), engine);
-                        mOnImportDialogResult.OnDialogResult(1);
+                        onImportDialogFinish();
                         mProgressBar.setVisibility(View.GONE);
                         dismiss();
                     }
@@ -88,7 +103,7 @@ public class ImportFragment extends DialogFragment
     private View.OnClickListener mNegativeOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            mOnImportDialogResult.OnDialogResult(0);
+            onImportDialogFinish();
             dismiss();
         }
     };

@@ -41,6 +41,8 @@
         <activity
             android:name="net.solutinno.websearch.ShareActivity"
             android:label="@string/app_name"
+            android:finishOnCloseSystemDialogs="true"
+            android:finishOnTaskLaunch="true"
             android:excludeFromRecents="true"
             android:theme="@style/ShareTheme" >
             <intent-filter>
