@@ -164,6 +164,10 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     }
 
     public void ClearFields() {
+        if (mBackgroundField != null) {
+            mFieldName.setBackgroundDrawable(mBackgroundField);
+            mFieldUrl.setBackgroundDrawable(mBackgroundField);
+        }
         mFieldName.setText("");
         mFieldUrl.setText("");
         mFieldImageUrl.setText("");
