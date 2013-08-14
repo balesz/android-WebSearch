@@ -17,6 +17,8 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
         mDetailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
         mDetailFragment.SetDetailController(mDetailController);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override

@@ -31,7 +31,8 @@
             android:src="@drawable/ic_paste"
             android:scaleType="fitCenter" android:clickable="true"
             android:paddingRight="2dp"
-            android:layout_below="@id/detail_fieldName"
+            android:layout_alignTop="@id/detail_fieldUrl"
+            android:layout_alignBottom="@id/detail_fieldUrl"
             android:layout_alignRight="@id/detail_fieldUrl"
             android:layout_width="32dp" android:layout_height="32dp"/>
 
@@ -60,7 +61,8 @@
             android:src="@drawable/ic_download"
             android:scaleType="fitCenter" android:clickable="true"
             android:paddingRight="2dp"
-            android:layout_below="@id/detail_fieldDescription"
+            android:layout_alignTop="@id/detail_fieldImageUrl"
+            android:layout_alignBottom="@id/detail_fieldImageUrl"
             android:layout_alignRight="@id/detail_fieldImageUrl"
             android:layout_width="32dp" android:layout_height="32dp"/>
 
