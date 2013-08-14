@@ -1,0 +1,3 @@
+[submodule "lib/android-lib-Common"]
+	path = lib/android-lib-Common
+	url = https://balesz@github.com/balesz/android-lib-Common.git

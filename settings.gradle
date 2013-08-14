@@ -1,1 +1,1 @@
-include ':WebSearch', ':submodule-ActionBarSherlock:actionbarsherlock'
+include ':WebSearch', ':lib:android-lib-Common'
