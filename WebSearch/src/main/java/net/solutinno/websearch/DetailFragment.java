@@ -131,17 +131,22 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     View.OnClickListener mButtonLoadImageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final URL url;
-            try { url = new URL(StringHelper.getStringFromCharSequence(mFieldImageUrl.getText())); }
-            catch (Exception ex) {
-                Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
+            String url = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
+            if (StringHelper.isNullOrEmpty(url) || !UrlHelper.isUrlValid(url)) {
+                notifyValidity(mFieldImageUrl, R.string.error_invalid_url);
                 return;
             }
-            new AsyncTask<URL, Integer, Bitmap>() {
+            new AsyncTask<String, Integer, Bitmap>() {
                 @Override
-                protected Bitmap doInBackground(URL... urls) {
-                    byte[] data = NetworkHelper.downloadIntoByteArray(urls[0]);
-                    return BitmapFactory.decodeByteArray(data, 0, data.length);
+                protected Bitmap doInBackground(String... urls) {
+                    try {
+                        byte[] data = NetworkHelper.downloadIntoByteArray(new URL(urls[0]));
+                        return BitmapFactory.decodeByteArray(data, 0, data.length);
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                        return null;
+                    }
                 }
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
@@ -243,7 +248,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         view.requestFocus();
         int[] loc = new int[2]; view.getLocationOnScreen(loc);
         Toast toast = Toast.makeText(getActivity(), stringResourceId, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.START | Gravity.TOP, loc[0] + 32, loc[1]);
+        toast.setGravity(Gravity.START | Gravity.TOP, loc[0] + 32, loc[1] - view.getHeight()/2);
         toast.setMargin(0, 0);
         toast.show();
     }
