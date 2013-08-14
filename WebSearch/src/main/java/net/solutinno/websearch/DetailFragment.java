@@ -5,13 +5,13 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +38,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     private final int ICON_WIDTH = 48;
     private final int ICON_HEIGHT = 48;
 
-    Drawable mBackgroundField;
     EditText mFieldName;
     EditText mFieldUrl;
     EditText mFieldImageUrl;
@@ -62,8 +61,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         mFieldUrl = (EditText) getView().findViewById(R.id.detail_fieldUrl);
         mFieldImageUrl = (EditText) getView().findViewById(R.id.detail_fieldImageUrl);
         mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
-
-        mBackgroundField = mFieldName.getBackground();
 
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
         mButtonLoadImage = (ImageView) getView().findViewById(R.id.detail_buttonLoadImage);
@@ -164,10 +161,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     }
 
     public void ClearFields() {
-        if (mBackgroundField != null) {
-            mFieldName.setBackgroundDrawable(mBackgroundField);
-            mFieldUrl.setBackgroundDrawable(mBackgroundField);
-        }
         mFieldName.setText("");
         mFieldUrl.setText("");
         mFieldImageUrl.setText("");
@@ -220,43 +213,43 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         }
     }
 
-    public void Cancel() {
-        onDetailFinish(MODE_CANCEL);
-    }
-
     private boolean isValid() {
         String url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
         String name = StringHelper.getStringFromCharSequence(mFieldName.getText());
 
         if (StringHelper.isNullOrEmpty(name)) {
-            Toast.makeText(getActivity(), R.string.error_name_required, Toast.LENGTH_SHORT).show();
-            mFieldName.setBackgroundResource(R.color.light_red);
+            notifyValidity(mFieldName, R.string.error_name_required);
             return false;
         }
-        else mFieldName.setBackgroundDrawable(mBackgroundField);
 
         if (StringHelper.isNullOrEmpty(url)) {
-            Toast.makeText(getActivity(), R.string.error_url_required, Toast.LENGTH_SHORT).show();
-            mFieldUrl.setBackgroundResource(R.color.light_red);
+            notifyValidity(mFieldUrl, R.string.error_url_required);
             return false;
         }
-        else mFieldUrl.setBackgroundDrawable(mBackgroundField);
 
         if (!UrlHelper.isUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""))) {
-            Toast.makeText(getActivity(), R.string.error_url_invalid, Toast.LENGTH_SHORT).show();
-            mFieldUrl.setBackgroundResource(R.color.light_red);
+            notifyValidity(mFieldUrl, R.string.error_url_invalid);
             return false;
         }
-        else mFieldUrl.setBackgroundDrawable(mBackgroundField);
 
         if (!url.contains(SearchEngine.SEARCH_TERM)) {
-            Toast.makeText(getActivity(), R.string.error_url_missing_term, Toast.LENGTH_SHORT).show();
-            mFieldUrl.setBackgroundResource(R.color.light_red);
+            notifyValidity(mFieldUrl, R.string.error_url_missing_term);
             return false;
         }
-        else mFieldUrl.setBackgroundDrawable(mBackgroundField);
 
         return true;
+    }
+    private void notifyValidity(View view, int stringResourceId) {
+        view.requestFocus();
+        int[] loc = new int[2]; view.getLocationOnScreen(loc);
+        Toast toast = Toast.makeText(getActivity(), stringResourceId, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.START | Gravity.TOP, loc[0] + 32, loc[1]);
+        toast.setMargin(0, 0);
+        toast.show();
+    }
+
+    public void Cancel() {
+        onDetailFinish(MODE_CANCEL);
     }
 
     public void Save() {
