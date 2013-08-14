@@ -17,7 +17,7 @@
         android:id="@id/detail_progressBar"
         android:visibility="invisible"
         android:indeterminateOnly="true"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        style="@style/ProgressBarTheme"
         android:layout_below="@id/detail_fieldImportFromUrl"
         android:layout_width="match_parent" android:layout_height="wrap_content" />
 
