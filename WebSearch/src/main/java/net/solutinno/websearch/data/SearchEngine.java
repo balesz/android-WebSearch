@@ -1,6 +1,5 @@
 package net.solutinno.websearch.data;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -33,8 +32,6 @@ public class SearchEngine
 
     @DatabaseField
     public String imageUrl;
-
-    public Drawable image;
 
     public Uri imageUri;
 }

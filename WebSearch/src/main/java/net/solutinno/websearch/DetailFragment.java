@@ -1,6 +1,7 @@
 package net.solutinno.websearch;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -52,10 +53,16 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     WeakReference<DetailController> mDetailController;
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_detail, container, false);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         mProgressBar = (ProgressBar) getView().findViewById(R.id.detail_progressBar);
+        mProgressBar.setVisibility(View.GONE);
 
         mFieldName = (EditText) getView().findViewById(R.id.detail_fieldName);
         mFieldUrl = (EditText) getView().findViewById(R.id.detail_fieldUrl);
@@ -70,11 +77,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
     @Override
@@ -105,11 +107,8 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     @Override
     public void onSelectItem(UUID id) {
-        if (id != null) {
-            mEngine = DataProvider.getSearchEngine(getActivity(), id);
-        }
+        if (id != null) mEngine = DataProvider.getSearchEngine(getActivity(), id);
         else mEngine = new SearchEngine();
-
         setData();
     }
 
@@ -117,7 +116,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         @Override
         public void onClick(View view) {
             if (getActivity().getCurrentFocus() != mFieldUrl) return;
-
             String text = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
             int selStart = mFieldUrl.getSelectionStart();
             int selEnd = mFieldUrl.getSelectionEnd();
@@ -136,6 +134,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
                 notifyValidity(mFieldImageUrl, R.string.error_invalid_url);
                 return;
             }
+            mProgressBar.setVisibility(View.VISIBLE);
             new AsyncTask<String, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(String... urls) {
@@ -154,7 +153,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
                     ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
                     BitmapDrawable icon = (BitmapDrawable) DrawableHelper.getDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
                     actionBar.setIcon(icon);
-                    mEngine.image = icon;
+                    mProgressBar.setVisibility(View.GONE);
                 }
             }.execute(url);
         }
@@ -181,7 +180,6 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         result.url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
         result.imageUrl = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
         result.description = StringHelper.getStringFromCharSequence(mFieldDescription.getText());
-        result.image = mEngine.image;
         return result;
     }
 
@@ -259,9 +257,20 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     public void Save() {
         if (isValid()) {
-            mEngine = getData();
-            DataProvider.updateSearchEngine(getActivity(), mEngine);
-            onDetailFinish(MODE_UPDATE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            new AsyncTask<DetailFragment, Integer, SearchEngine>() {
+                @Override
+                protected SearchEngine doInBackground(DetailFragment... fragments) {
+                    mEngine = getData();
+                    DataProvider.updateSearchEngine(getActivity(), mEngine);
+                    return null;
+                }
+                @Override
+                protected void onPostExecute(SearchEngine engine) {
+                    mProgressBar.setVisibility(View.GONE);
+                    onDetailFinish(MODE_UPDATE);
+                }
+            }.execute(this);
         }
     }
 

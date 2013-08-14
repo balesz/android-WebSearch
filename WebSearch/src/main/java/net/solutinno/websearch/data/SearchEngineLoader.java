@@ -17,8 +17,6 @@ public class SearchEngineLoader extends AsyncTaskLoader<List<SearchEngine>>
     public List<SearchEngine> loadInBackground() {
         List<SearchEngine> result = DataProvider.getSearchEngineList(getContext());
         if (result.isEmpty()) {
-            //TODO: I have to put this call somewhere I can show progressbar!
-            DataProvider.fillDatabase(getContext());
             result = DataProvider.getSearchEngineList(getContext());
         }
         return result;

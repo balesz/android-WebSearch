@@ -19,4 +19,6 @@
     <item name="detail_fieldImage" type="id"/>
     <item name="search_content" type="id"/>
     <item name="search_grid" type="id"/>
+    <item name="list_progressBar" type="id"/>
+    <item name="list_listView" type="id"/>
 </resources>

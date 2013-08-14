@@ -92,14 +92,15 @@ public class ImportFragment extends DialogFragment
             new AsyncTask<String, Integer, SearchEngine>() {
                 @Override
                 protected SearchEngine doInBackground(String... urls) {
-                    return new OpenSearchProvider(urls[0]).GetEngine();
+                    SearchEngine result = new OpenSearchProvider(urls[0]).GetEngine();
+                    if (result != null) DataProvider.updateSearchEngine(getActivity(), result);
+                    return result;
                 }
                 @Override
                 protected void onPostExecute(SearchEngine engine) {
                     Toast.makeText(getActivity(), engine == null ? R.string.information_import_unsuccesfull : R.string.information_import_succesfull, Toast.LENGTH_LONG).show();
                     mProgressBar.setVisibility(View.GONE);
                     if (engine != null) {
-                        DataProvider.updateSearchEngine(getActivity(), engine);
                         onImportDialogFinish(Activity.RESULT_OK);
                         dismiss();
                     }
