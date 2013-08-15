@@ -118,11 +118,13 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     }
 
     View.OnFocusChangeListener mOnFocusChangeListener = new View.OnFocusChangeListener() {
+        Toast toast;
         @Override
         public void onFocusChange(View view, boolean b) {
             if (view instanceof EditText && b && !StringHelper.isNullOrEmpty(((EditText)view).getText())) {
                 int[] loc = new int[2]; view.getLocationOnScreen(loc);
-                Toast toast = Toast.makeText(getActivity(), ((EditText)view).getHint(), Toast.LENGTH_SHORT);
+                if (toast != null) toast.cancel();
+                toast = Toast.makeText(getActivity(), ((EditText)view).getHint(), Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.START | Gravity.TOP, loc[0], loc[1]);
                 toast.setMargin(0, 0);
                 toast.show();
