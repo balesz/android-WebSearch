@@ -42,21 +42,10 @@
     <!-- ################################################## -->
 
     <EditText
-        android:id="@id/detail_fieldDescription"
-        android:hint="@string/hint_description"
-        android:inputType="textMultiLine|textCapSentences"
-        android:singleLine="false" android:lines="3" android:maxLines="3"
-        android:layout_below="@id/detail_fieldUrl"
-        android:layout_marginBottom="@dimen/field_vertical_margin"
-        android:layout_width="match_parent" android:layout_height="wrap_content" />
-
-    <!-- ################################################## -->
-
-    <EditText
         android:id="@id/detail_fieldImageUrl"
         android:hint="@string/hint_image" android:inputType="text|textUri"
         android:paddingRight="34dp"
-        android:layout_below="@id/detail_fieldDescription"
+        android:layout_below="@id/detail_fieldUrl"
         android:layout_marginBottom="@dimen/field_vertical_margin"
         android:layout_width="match_parent" android:layout_height="wrap_content"/>
     <ImageView
@@ -68,5 +57,17 @@
         android:layout_alignBottom="@id/detail_fieldImageUrl"
         android:layout_alignRight="@id/detail_fieldImageUrl"
         android:layout_width="32dp" android:layout_height="32dp"/>
+
+    <!-- ################################################## -->
+
+    <EditText
+        android:id="@id/detail_fieldDescription"
+        android:hint="@string/hint_description"
+        android:inputType="textMultiLine|textCapSentences"
+        android:singleLine="false" android:lines="3" android:maxLines="3"
+        android:layout_below="@id/detail_fieldImageUrl"
+        android:layout_marginBottom="@dimen/field_vertical_margin"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
 
 </RelativeLayout>
