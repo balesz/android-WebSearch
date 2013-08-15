@@ -1,7 +1,6 @@
 package net.solutinno.websearch;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -65,9 +64,13 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         mProgressBar.setVisibility(View.GONE);
 
         mFieldName = (EditText) getView().findViewById(R.id.detail_fieldName);
+        mFieldName.setOnFocusChangeListener(mOnFocusChangeListener);
         mFieldUrl = (EditText) getView().findViewById(R.id.detail_fieldUrl);
+        mFieldUrl.setOnFocusChangeListener(mOnFocusChangeListener);
         mFieldImageUrl = (EditText) getView().findViewById(R.id.detail_fieldImageUrl);
+        mFieldImageUrl.setOnFocusChangeListener(mOnFocusChangeListener);
         mFieldDescription = (EditText) getView().findViewById(R.id.detail_fieldDescription);
+        mFieldDescription.setOnFocusChangeListener(mOnFocusChangeListener);
 
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
         mButtonLoadImage = (ImageView) getView().findViewById(R.id.detail_buttonLoadImage);
@@ -77,6 +80,8 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
         UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
         onSelectItem(id);
+
+        getView().findViewById(R.id.detail_container).requestFocus();
     }
 
     @Override
@@ -111,6 +116,19 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         else mEngine = new SearchEngine();
         setData();
     }
+
+    View.OnFocusChangeListener mOnFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View view, boolean b) {
+            if (view instanceof EditText && b && !StringHelper.isNullOrEmpty(((EditText)view).getText())) {
+                int[] loc = new int[2]; view.getLocationOnScreen(loc);
+                Toast toast = Toast.makeText(getActivity(), ((EditText)view).getHint(), Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.START | Gravity.TOP, loc[0], loc[1]);
+                toast.setMargin(0, 0);
+                toast.show();
+            }
+        }
+    };
 
     View.OnClickListener mButtonAddSearchTermClickListener = new View.OnClickListener() {
         @Override

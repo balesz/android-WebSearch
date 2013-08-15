@@ -1,73 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:focusable="true" android:focusableInTouchMode="true"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@id/detail_progressBar"
-        style="@style/ProgressBarTheme"
-        android:indeterminateOnly="true" android:visibility="gone"
-        android:layout_width="match_parent" android:layout_height="wrap_content" />
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@id/detail_container"
+        android:focusable="true" android:focusableInTouchMode="true"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    <!-- ################################################## -->
+        <ProgressBar
+            android:id="@id/detail_progressBar"
+            style="@style/ProgressBarTheme"
+            android:indeterminateOnly="true" android:visibility="gone"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@id/detail_fieldName"
-        android:hint="@string/hint_name" android:inputType="text|textCapWords"
-        android:layout_below="@id/detail_progressBar"
-        android:layout_marginBottom="@dimen/field_vertical_margin"
-        android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <!-- ################################################## -->
 
-    <!-- ################################################## -->
+        <EditText
+            android:id="@id/detail_fieldName"
+            android:hint="@string/hint_name"
+            android:inputType="text|textCapWords" android:imeOptions="flagNoExtractUi"
+            android:layout_below="@id/detail_progressBar"
+            android:layout_marginBottom="@dimen/field_vertical_margin"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@id/detail_fieldUrl"
-        android:hint="@string/hint_url" android:inputType="text|textUri"
-        android:paddingRight="34dp"
-        android:layout_below="@id/detail_fieldName"
-        android:layout_marginBottom="@dimen/field_vertical_margin"
-        android:layout_width="match_parent" android:layout_height="wrap_content" />
-    <ImageView
-        android:id="@id/detail_buttonAddSearchTerm"
-        android:src="@drawable/ic_paste"
-        android:scaleType="fitCenter" android:clickable="true"
-        android:paddingRight="2dp"
-        android:layout_alignTop="@id/detail_fieldUrl"
-        android:layout_alignBottom="@id/detail_fieldUrl"
-        android:layout_alignRight="@id/detail_fieldUrl"
-        android:layout_width="32dp" android:layout_height="32dp"/>
+        <!-- ################################################## -->
 
-    <!-- ################################################## -->
+        <EditText
+            android:id="@id/detail_fieldUrl"
+            android:hint="@string/hint_url"
+            android:inputType="text|textUri" android:imeOptions="flagNoExtractUi"
+            android:paddingRight="34dp"
+            android:layout_below="@id/detail_fieldName"
+            android:layout_marginBottom="@dimen/field_vertical_margin"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@id/detail_buttonAddSearchTerm"
+            android:src="@drawable/ic_paste"
+            android:scaleType="fitCenter" android:clickable="true"
+            android:paddingRight="2dp"
+            android:layout_alignTop="@id/detail_fieldUrl"
+            android:layout_alignBottom="@id/detail_fieldUrl"
+            android:layout_alignRight="@id/detail_fieldUrl"
+            android:layout_width="32dp" android:layout_height="32dp"/>
 
-    <EditText
-        android:id="@id/detail_fieldImageUrl"
-        android:hint="@string/hint_image" android:inputType="text|textUri"
-        android:paddingRight="34dp"
-        android:layout_below="@id/detail_fieldUrl"
-        android:layout_marginBottom="@dimen/field_vertical_margin"
-        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    <ImageView
-        android:id="@id/detail_buttonLoadImage"
-        android:src="@drawable/ic_download"
-        android:scaleType="fitCenter" android:clickable="true"
-        android:paddingRight="2dp"
-        android:layout_alignTop="@id/detail_fieldImageUrl"
-        android:layout_alignBottom="@id/detail_fieldImageUrl"
-        android:layout_alignRight="@id/detail_fieldImageUrl"
-        android:layout_width="32dp" android:layout_height="32dp"/>
+        <!-- ################################################## -->
 
-    <!-- ################################################## -->
+        <EditText
+            android:id="@id/detail_fieldImageUrl"
+            android:hint="@string/hint_image"
+            android:inputType="text|textUri" android:imeOptions="flagNoExtractUi"
+            android:paddingRight="34dp"
+            android:layout_below="@id/detail_fieldUrl"
+            android:layout_marginBottom="@dimen/field_vertical_margin"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@id/detail_buttonLoadImage"
+            android:src="@drawable/ic_download"
+            android:scaleType="fitCenter" android:clickable="true"
+            android:paddingRight="2dp"
+            android:layout_alignTop="@id/detail_fieldImageUrl"
+            android:layout_alignBottom="@id/detail_fieldImageUrl"
+            android:layout_alignRight="@id/detail_fieldImageUrl"
+            android:layout_width="32dp" android:layout_height="32dp"/>
 
-    <EditText
-        android:id="@id/detail_fieldDescription"
-        android:hint="@string/hint_description"
-        android:inputType="textMultiLine|textCapSentences"
-        android:singleLine="false" android:lines="3" android:maxLines="3"
-        android:layout_below="@id/detail_fieldImageUrl"
-        android:layout_marginBottom="@dimen/field_vertical_margin"
-        android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <!-- ################################################## -->
 
+        <EditText
+            android:id="@id/detail_fieldDescription"
+            android:hint="@string/hint_description"
+            android:inputType="textMultiLine|textCapSentences"
+            android:singleLine="false" android:lines="3" android:maxLines="3"
+            android:layout_below="@id/detail_fieldImageUrl"
+            android:layout_marginBottom="@dimen/field_vertical_margin"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

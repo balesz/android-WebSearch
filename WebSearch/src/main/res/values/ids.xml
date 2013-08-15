@@ -21,4 +21,5 @@
     <item name="search_grid" type="id"/>
     <item name="list_progressBar" type="id"/>
     <item name="list_listView" type="id"/>
+    <item name="detail_container" type="id"/>
 </resources>
