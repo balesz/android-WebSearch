@@ -1,0 +1,3 @@
+[submodule "lib/android-lib-Solutinno"]
+	path = lib/android-lib-Solutinno
+	url = https://balesz@github.com/balesz/android-lib-Solutinno.git
