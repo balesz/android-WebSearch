@@ -24,10 +24,9 @@ public class DataProvider
         Database db = new Database(context);
         if (db.engine.countOf() > 0) return;
         try {
-            String[] engines = context.getAssets().list("");
+            String[] engines = context.getAssets().list("opensearch");
             for (String engine : engines) {
-                if (!engine.startsWith("os_")) continue;
-                SearchEngine se = new OpenSearchProvider(context.getAssets().open(engine)).GetEngine();
+                SearchEngine se = new OpenSearchProvider(context.getAssets().open("opensearch/"+engine)).GetEngine();
                 if (se != null) {
                     se.id = UUID.randomUUID();
                     db.engine.create(se);
