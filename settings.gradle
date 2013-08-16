@@ -1,1 +1,1 @@
-include ':WebSearch', ':lib:android-lib-Common'
+include ':WebSearch', ':lib:android-lib-Solutinno'
