@@ -8,12 +8,12 @@ import android.net.Uri;
 import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.UrlHelper;
 import net.solutinno.websearch.Application;
-import net.solutinno.websearch.R;
 import net.solutinno.websearch.provider.OpenSearchProvider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -23,16 +23,21 @@ public class DataProvider
     public static void fillDatabase(Context context) {
         Database db = new Database(context);
         if (db.engine.countOf() > 0) return;
-        String[] engines = context.getResources().getStringArray(R.array.search_engines);
-        for (String engine : engines) {
-            SearchEngine se = new OpenSearchProvider(engine).GetEngine();
-            if (se != null) {
-                se.id = UUID.randomUUID();
-                db.engine.create(se);
-                downloadImageOfSearchEngine(se);
+        try {
+            String[] engines = context.getAssets().list("");
+            for (String engine : engines) {
+                if (!engine.startsWith("os_")) continue;
+                SearchEngine se = new OpenSearchProvider(context.getAssets().open(engine)).GetEngine();
+                if (se != null) {
+                    se.id = UUID.randomUUID();
+                    db.engine.create(se);
+                    downloadImageOfSearchEngine(se);
+                }
             }
+            db.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        db.close();
     }
 
     public static List<SearchEngine> getSearchEngineList(Context context) {

@@ -1,22 +1,29 @@
 package net.solutinno.websearch.provider;
 
 import net.solutinno.util.NetworkHelper;
+import net.solutinno.util.StreamHelper;
 import net.solutinno.websearch.data.SearchEngine;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class OpenSearchProvider
 {
     private URL mUrl;
+    private InputStream mStream;
 
     private String mContent;
 
     private HtmlCleaner mCleaner;
     private TagNode mRoot;
+
+    public OpenSearchProvider(InputStream stream) {
+        mStream = stream;
+    }
 
     public OpenSearchProvider(String url) {
         try { mUrl = new URL(url); }
@@ -25,8 +32,9 @@ public class OpenSearchProvider
 
     public SearchEngine GetEngine() {
         try {
-            if (mUrl == null) throw new MalformedURLException();
-            downloadContent(); parseContent();
+            if (mStream == null && mUrl == null) return null;
+            downloadContent();
+            parseContent();
             if (isOpenSearchXml()) return parseOpenSearchXml();
             else if (hasOpenSearchXml()) return new OpenSearchProvider(getOpenSearchXmlUrl()).GetEngine();
             else return null;
@@ -38,7 +46,8 @@ public class OpenSearchProvider
     }
 
     private void downloadContent() throws Exception {
-        mContent = NetworkHelper.downloadIntoText(mUrl);
+        if (mUrl != null) mContent = NetworkHelper.downloadIntoText(mUrl);
+        else if (mStream != null) mContent = StreamHelper.inputStreamToString(mStream, "UTF-8");
         if (mContent == null) throw new Exception(String.format("Download was failed! (Url: %s)", mUrl.toString()));
     }
 
