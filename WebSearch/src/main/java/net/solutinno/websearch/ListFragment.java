@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import net.solutinno.websearch.data.DataProvider;
+import net.solutinno.websearch.data.Database;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.websearch.data.SearchEngineLoader;
@@ -64,7 +65,10 @@ public class ListFragment extends Fragment {
                 }
             });
         }
+
+        boolean dbIsExists = Database.isExists(getActivity());
         getLoaderManager().initLoader(0, null, mLoaderCallbacks);
+        if (!dbIsExists) loadDefaultEngines();
     }
 
     public void RegisterSelectItemListener(SelectItemListener listener) {
@@ -122,7 +126,6 @@ public class ListFragment extends Fragment {
         public void onLoadFinished(Loader<List<SearchEngine>> listLoader, List<SearchEngine> searchEngines) {
             if (mAdapter != null) {
                 mAdapter.changeCursor(SearchEngineCursor.createBySearchEngineList(searchEngines));
-                if (searchEngines.isEmpty()) loadDefaultEngines();
             }
         }
         @Override

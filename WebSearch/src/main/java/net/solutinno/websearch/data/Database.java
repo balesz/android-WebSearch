@@ -25,13 +25,17 @@ public class Database extends OrmLiteSqliteOpenHelper
         engine = getRuntimeExceptionDao(SearchEngine.class);
     }
 
+    public static boolean isExists(Context context) {
+        return context.getDatabasePath(DB_NAME).exists();
+    }
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
             TableUtils.dropTable(connectionSource, SearchEngine.class, true);
             TableUtils.createTable(connectionSource, SearchEngine.class);
         }
-        catch (Exception ex) { }
+        catch (Exception ex) { ex.printStackTrace(); }
     }
 
     @Override
