@@ -17,7 +17,6 @@
     <string name="confirmation_delete">Do you want to delete the search engine?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="error_invalid_url">The URL is invalid!</string>
     <string name="action_import">Import</string>
     <string name="caption_import">Import</string>
     <string name="caption_cancel">Cancel</string>
@@ -27,8 +26,9 @@
     <string name="error_name_required">The Name field is required!</string>
     <string name="error_url_required">The Url field is required!</string>
     <string name="error_url_invalid">The Url field is invalid!</string>
-    <string name="error_url_missing_term">The search term pattern is missing from the Url field!
-    </string>
+    <string name="error_url_missing_term">The search term pattern is missing from the Url field!</string>
+    <string name="error_image_url_invalid">The Image Url field is invalid!</string>
+    <string name="error_import_url_invalid">The URL is invalid!</string>
     <string name="dialog_import_defaults_title">Import Defaults</string>
     <string name="dialog_import_defaults_message">Do you want to load the default engines?</string>
     <string name="caption_yes">Yes</string>

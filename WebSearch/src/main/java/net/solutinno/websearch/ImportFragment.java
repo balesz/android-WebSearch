@@ -85,7 +85,7 @@ public class ImportFragment extends DialogFragment
             final ProgressBar mProgressBar = (ProgressBar) mContent.findViewById(R.id.detail_progressBar);
             final String urlStr = StringHelper.getStringFromCharSequence(mFieldImportUrl.getText());
             if (!UrlHelper.isUrlValid(urlStr)) {
-                Toast.makeText(getActivity(), R.string.error_invalid_url, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.error_import_url_invalid, Toast.LENGTH_LONG).show();
                 return;
             }
             mProgressBar.setVisibility(View.VISIBLE);

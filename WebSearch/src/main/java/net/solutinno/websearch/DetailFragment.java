@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.solutinno.util.DrawableHelper;
@@ -28,6 +29,8 @@ import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.StringHelper;
+import net.solutinno.widget.ToastHandler;
+import net.solutinno.widget.ToastValidationProvider;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -49,10 +52,16 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     SearchEngine mEngine;
 
+    ToastValidationProvider mValidationProvider;
+    ToastHandler mToastHandler;
+
     WeakReference<DetailController> mDetailController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mToastHandler = new ToastHandler(getActivity());
+        mValidationProvider = new ToastValidationProvider(mToastHandler);
+        mValidationProvider.setOnValidate(mOnValidate);
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
@@ -82,6 +91,12 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         onSelectItem(id);
 
         getView().findViewById(R.id.detail_container).requestFocus();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mToastHandler.cancel();
     }
 
     @Override
@@ -118,16 +133,14 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     }
 
     View.OnFocusChangeListener mOnFocusChangeListener = new View.OnFocusChangeListener() {
-        Toast toast;
         @Override
         public void onFocusChange(View view, boolean b) {
             if (view instanceof EditText && b && !StringHelper.isNullOrEmpty(((EditText)view).getText())) {
                 int[] loc = new int[2]; view.getLocationOnScreen(loc);
-                if (toast != null) toast.cancel();
-                toast = Toast.makeText(getActivity(), ((EditText)view).getHint(), Toast.LENGTH_SHORT);
+                Toast toast = mToastHandler.getToast(((EditText)view).getHint(), Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.START | Gravity.TOP, loc[0], loc[1]);
                 toast.setMargin(0, 0);
-                toast.show();
+                mToastHandler.show(toast);
             }
         }
     };
@@ -149,12 +162,9 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     View.OnClickListener mButtonLoadImageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String url = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
-            if (StringHelper.isNullOrEmpty(url) || !UrlHelper.isUrlValid(url)) {
-                notifyValidity(mFieldImageUrl, R.string.error_invalid_url);
-                return;
-            }
+            if (!mValidationProvider.validate(mFieldImageUrl)) return;
             mProgressBar.setVisibility(View.VISIBLE);
+            String url = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
             new AsyncTask<String, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(String... urls) {
@@ -169,7 +179,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
                 }
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
-                    Toast.makeText(getActivity(), R.string.information_image_download_successfull, Toast.LENGTH_LONG).show();
+                    mToastHandler.show(mToastHandler.getToast(R.string.information_image_download_successfull, Toast.LENGTH_LONG));
                     ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
                     BitmapDrawable icon = (BitmapDrawable) DrawableHelper.getDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
                     actionBar.setIcon(icon);
@@ -179,6 +189,31 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         }
     };
 
+    ToastValidationProvider.OnValidate mOnValidate = new ToastValidationProvider.OnValidate() {
+        @Override
+        public Integer validate(View view) {
+            if (view == mFieldName) {
+                String name = StringHelper.getStringFromCharSequence(mFieldName.getText());
+                if (StringHelper.isNullOrEmpty(name))
+                    return R.string.error_name_required;
+            }
+            else if (view == mFieldUrl) {
+                String url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
+                if (StringHelper.isNullOrEmpty(url))
+                    return R.string.error_url_required;
+                if (!UrlHelper.isUrlValid(url.replace(SearchEngine.SEARCH_TERM, "")))
+                    return R.string.error_url_invalid;
+                if (!url.contains(SearchEngine.SEARCH_TERM))
+                    return R.string.error_url_missing_term;
+            }
+            else if (view == mFieldImageUrl) {
+                String url = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
+                if (StringHelper.isNullOrEmpty(url) || !UrlHelper.isUrlValid(url))
+                    return R.string.error_image_url_invalid;
+            }
+            return null;
+        }
+    };
 
     public void SetDetailController(DetailController controller) {
         mDetailController = new WeakReference<DetailController>(controller);
@@ -236,47 +271,12 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         }
     }
 
-    private boolean isValid() {
-        String url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
-        String name = StringHelper.getStringFromCharSequence(mFieldName.getText());
-
-        if (StringHelper.isNullOrEmpty(name)) {
-            notifyValidity(mFieldName, R.string.error_name_required);
-            return false;
-        }
-
-        if (StringHelper.isNullOrEmpty(url)) {
-            notifyValidity(mFieldUrl, R.string.error_url_required);
-            return false;
-        }
-
-        if (!UrlHelper.isUrlValid(url.replace(SearchEngine.SEARCH_TERM, ""))) {
-            notifyValidity(mFieldUrl, R.string.error_url_invalid);
-            return false;
-        }
-
-        if (!url.contains(SearchEngine.SEARCH_TERM)) {
-            notifyValidity(mFieldUrl, R.string.error_url_missing_term);
-            return false;
-        }
-
-        return true;
-    }
-    private void notifyValidity(View view, int stringResourceId) {
-        view.requestFocus();
-        int[] loc = new int[2]; view.getLocationOnScreen(loc);
-        Toast toast = Toast.makeText(getActivity(), stringResourceId, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.START | Gravity.TOP, loc[0] + 32, loc[1] - view.getHeight()/2);
-        toast.setMargin(0, 0);
-        toast.show();
-    }
-
     public void Cancel() {
         onDetailFinish(MODE_CANCEL);
     }
 
     public void Save() {
-        if (isValid()) {
+        if (mValidationProvider.validate(new TextView[] {mFieldName, mFieldUrl})) {
             mProgressBar.setVisibility(View.VISIBLE);
             new AsyncTask<DetailFragment, Integer, SearchEngine>() {
                 @Override
