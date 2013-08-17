@@ -29,56 +29,93 @@ import java.util.UUID;
 
 public class ListFragment extends Fragment {
 
-    ListView mListView;
-    SimpleCursorAdapter mAdapter;
+    ListView listView;
+    SimpleCursorAdapter adapter;
+    ProgressBar progressBar;
+    View emptyList;
 
-    ProgressBar mProgressBar;
-
-    SelectItemListener mSelectItemListener;
+    SelectItemListener selectItemListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_list, container, false);
-        if (result != null) {
-            mProgressBar = (ProgressBar) result.findViewById(R.id.list_progressBar);
-            mListView = (ListView) result.findViewById(R.id.list_listView);
-            mListView.setOnItemClickListener(mItemClickListener);
-        }
+        assert result != null;
+        emptyList = result.findViewById(R.id.list_empty);
+        emptyList.setOnClickListener(importClick);
+        progressBar = (ProgressBar) result.findViewById(R.id.list_progressBar);
+        listView = (ListView) result.findViewById(R.id.list_listView);
+        listView.setOnItemClickListener(itemClickListener);
         return result;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (mListView != null) {
-            mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.item_list, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
-            mListView.setAdapter(mAdapter);
-            mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+        if (listView != null) {
+            adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_list, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
+            listView.setAdapter(adapter);
+            adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                 @Override
                 public boolean setViewValue(View view, Cursor cursor, int i) {
                     if (view.getId() == R.id.item_icon) {
-                        ((ImageView)view).setImageDrawable(null);
+                        ((ImageView) view).setImageDrawable(null);
                     }
                     return false;
                 }
             });
         }
-
         boolean dbIsExists = Database.isExists(getActivity());
-        getLoaderManager().initLoader(0, null, mLoaderCallbacks);
+        getLoaderManager().initLoader(0, null, loaderCallbacks);
         if (!dbIsExists) loadDefaultEngines();
     }
 
     public void setSelectItemListener(SelectItemListener listener) {
-        mSelectItemListener = listener;
+        selectItemListener = listener;
     }
+
+    private View.OnClickListener importClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            loadDefaultEngines();
+        }
+    };
+
+    AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            SearchEngineCursor cursor = (SearchEngineCursor) adapter.getCursor();
+            UUID id = UUID.fromString(cursor.getString(cursor.getColumnIndex(SearchEngineCursor.COLUMN_ID)));
+            if (selectItemListener != null) selectItemListener.onSelectItem(id);
+        }
+    };
+
+    LoaderManager.LoaderCallbacks<List<SearchEngine>> loaderCallbacks = new LoaderManager.LoaderCallbacks<List<SearchEngine>>() {
+        @Override
+        public Loader<List<SearchEngine>> onCreateLoader(int i, Bundle bundle) {
+            return new SearchEngineLoader(getActivity());
+        }
+        @Override
+        public void onLoadFinished(Loader<List<SearchEngine>> listLoader, List<SearchEngine> searchEngines) {
+            if (adapter != null) {
+                adapter.changeCursor(SearchEngineCursor.createBySearchEngineList(searchEngines));
+                listView.setVisibility(searchEngines.isEmpty() ? View.GONE : View.VISIBLE);
+                emptyList.setVisibility(searchEngines.isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        }
+        @Override
+        public void onLoaderReset(Loader<List<SearchEngine>> listLoader) {
+            if (adapter != null) {
+                adapter.changeCursor(null);
+            }
+        }
+    };
 
     private void loadDefaultEngines() {
         DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == DialogInterface.BUTTON_POSITIVE) {
-                    mProgressBar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     new AsyncTask<Context, Integer, Boolean>() {
                         @Override
                         protected Boolean doInBackground(Context... contexts) {
@@ -87,7 +124,7 @@ public class ListFragment extends Fragment {
                         }
                         @Override
                         protected void onPostExecute(Boolean aBoolean) {
-                            mProgressBar.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
                             getLoaderManager().getLoader(0).forceLoad();
                         }
                     }.execute(getActivity());
@@ -102,34 +139,6 @@ public class ListFragment extends Fragment {
             .setNegativeButton(R.string.caption_no, clickListener)
             .show();
     }
-
-    AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            SearchEngineCursor cursor = (SearchEngineCursor)mAdapter.getCursor();
-            UUID id = UUID.fromString(cursor.getString(cursor.getColumnIndex(SearchEngineCursor.COLUMN_ID)));
-            if (mSelectItemListener != null) mSelectItemListener.onSelectItem(id);
-        }
-    };
-
-    LoaderManager.LoaderCallbacks<List<SearchEngine>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<List<SearchEngine>>() {
-        @Override
-        public Loader<List<SearchEngine>> onCreateLoader(int i, Bundle bundle) {
-            return new SearchEngineLoader(getActivity());
-        }
-        @Override
-        public void onLoadFinished(Loader<List<SearchEngine>> listLoader, List<SearchEngine> searchEngines) {
-            if (mAdapter != null) {
-                mAdapter.changeCursor(SearchEngineCursor.createBySearchEngineList(searchEngines));
-            }
-        }
-        @Override
-        public void onLoaderReset(Loader<List<SearchEngine>> listLoader) {
-            if (mAdapter != null) {
-                mAdapter.changeCursor(null);
-            }
-        }
-    };
 
     public static interface SelectItemListener
     {

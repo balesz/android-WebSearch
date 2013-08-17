@@ -22,7 +22,6 @@ import java.util.UUID;
 
 public class MainActivity extends ActionBarActivity
 {
-    Menu mainMenu;
     DrawerLayout drawerLayout;
     ListFragment listFragment;
     FrameLayout detailContainer;
@@ -66,17 +65,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.clear();
-        if (mainMenu == null) mainMenu = menu;
         if (!isDetailFragmentShown()) {
             getSupportActionBar().setIcon(R.drawable.ic_launcher);
             getSupportActionBar().setTitle(R.string.app_name);
-            getMenuInflater().inflate(R.menu.main, mainMenu);
+            getMenuInflater().inflate(R.menu.main, menu);
         }
         else {
-            getMenuInflater().inflate(R.menu.detail, mainMenu);
+            getMenuInflater().inflate(R.menu.detail, menu);
         }
-        return super.onCreateOptionsMenu(mainMenu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -127,7 +124,7 @@ public class MainActivity extends ActionBarActivity
     DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
         @Override
         public void onDrawerOpened(View view) {
-            onCreateOptionsMenu(mainMenu);
+            supportInvalidateOptionsMenu();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
@@ -135,7 +132,7 @@ public class MainActivity extends ActionBarActivity
         public void onDrawerClosed(View view) {
             deleteDetailFragment();
             listFragment.getLoaderManager().getLoader(0).forceLoad();
-            onCreateOptionsMenu(mainMenu);
+            supportInvalidateOptionsMenu();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
         }

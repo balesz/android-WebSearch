@@ -15,4 +15,23 @@
         android:id="@id/list_listView"
         android:layout_width="match_parent" android:layout_height="match_parent"/>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@id/list_empty"
+        android:clickable="true" android:linksClickable="true"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView
+            android:id="@id/list_textView1"
+            android:text="@string/caption_empty" android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <TextView
+            android:id="@id/list_textView2"
+            android:text="@string/message_empty" android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:layout_below="@id/list_textView1"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 </LinearLayout>

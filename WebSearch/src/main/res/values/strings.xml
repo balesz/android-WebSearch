@@ -33,5 +33,7 @@
     <string name="dialog_import_defaults_message">Do you want to load the default engines?</string>
     <string name="caption_yes">Yes</string>
     <string name="caption_no">No</string>
+    <string name="caption_empty">Empty</string>
+    <string name="message_empty">Tap to load defaults!</string>
 
 </resources>

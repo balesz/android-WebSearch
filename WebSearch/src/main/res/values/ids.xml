@@ -14,6 +14,9 @@
 
     <item name="list_progressBar" type="id"/>
     <item name="list_listView" type="id"/>
+    <item name="list_empty" type="id"/>
+    <item name="list_textView1" type="id"/>
+    <item name="list_textView2" type="id"/>
 
     <item name="search_content" type="id"/>
     <item name="search_grid" type="id"/>
