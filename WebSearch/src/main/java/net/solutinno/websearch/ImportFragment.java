@@ -59,7 +59,7 @@ public class ImportFragment extends DialogFragment
         assert button != null;
         button.setOnClickListener(mNegativeOnClick);
 
-        EditText fieldUrl = (EditText) mContent.findViewById(R.id.detail_fieldImportFromUrl);
+        EditText fieldUrl = (EditText) mContent.findViewById(R.id.import_fieldImportFromUrl);
         fieldUrl.setText(mUrl);
     }
 
@@ -81,8 +81,8 @@ public class ImportFragment extends DialogFragment
     private View.OnClickListener mPositiveOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final EditText mFieldImportUrl = (EditText) mContent.findViewById(R.id.detail_fieldImportFromUrl);
-            final ProgressBar mProgressBar = (ProgressBar) mContent.findViewById(R.id.detail_progressBar);
+            final EditText mFieldImportUrl = (EditText) mContent.findViewById(R.id.import_fieldImportFromUrl);
+            final ProgressBar mProgressBar = (ProgressBar) mContent.findViewById(R.id.import_progressBar);
             final String urlStr = StringHelper.getStringFromCharSequence(mFieldImportUrl.getText());
             if (!UrlHelper.isUrlValid(urlStr)) {
                 Toast.makeText(getActivity(), R.string.error_import_url_invalid, Toast.LENGTH_LONG).show();

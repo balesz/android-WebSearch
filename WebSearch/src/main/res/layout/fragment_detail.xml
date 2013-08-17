@@ -23,7 +23,7 @@
             android:id="@id/detail_fieldName"
             android:hint="@string/hint_name"
             android:inputType="text|textCapWords" android:imeOptions="flagNoExtractUi"
-            android:layout_below="@id/detail_progressBar"
+            android:layout_below="@id/import_progressBar"
             android:layout_marginBottom="@dimen/field_vertical_margin"
             android:layout_width="match_parent" android:layout_height="wrap_content" />
 

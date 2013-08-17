@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="detail_groupTextImport" type="id" />
-    <item name="detail_groupSeparatorImport" type="id" />
-    <item name="detail_fieldImportFromUrl" type="id" />
-    <item name="detail_buttonImportFromUrl" type="id" />
-    <item name="detail_groupTextData" type="id"/>
-    <item name="detail_groupSeparatorData" type="id"/>
+    <item name="import_fieldImportFromUrl" type="id"/>
+    <item name="import_progressBar" type="id"/>
+
+    <item name="detail_container" type="id"/>
+    <item name="detail_progressBar" type="id"/>
     <item name="detail_fieldName" type="id"/>
     <item name="detail_fieldUrl" type="id"/>
     <item name="detail_buttonAddSearchTerm" type="id"/>
     <item name="detail_fieldImageUrl" type="id"/>
-    <item name="detail_buttonRefreshImage" type="id"/>
-    <item name="detail_fieldDescription" type="id"/>
-    <item name="detail_groupSeparatorActions" type="id"/>
-    <item name="detail_buttonImport" type="id"/>
     <item name="detail_buttonLoadImage" type="id"/>
-    <item name="detail_progressBar" type="id"/>
-    <item name="detail_fieldImage" type="id"/>
-    <item name="search_content" type="id"/>
-    <item name="search_grid" type="id"/>
+    <item name="detail_fieldDescription" type="id"/>
+
     <item name="list_progressBar" type="id"/>
     <item name="list_listView" type="id"/>
-    <item name="detail_container" type="id"/>
+
+    <item name="search_content" type="id"/>
+    <item name="search_grid" type="id"/>
+
+    <item name="main_drawer_layout" type="id"/>
+    <item name="layout_detail_container" type="id"/>
+    <item name="layout_list_container" type="id"/>
+    <item name="fragment_list" type="id"/>
+    <item name="fragment_detail" type="id"/>
 </resources>

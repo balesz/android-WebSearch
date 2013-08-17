@@ -24,7 +24,6 @@ import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.websearch.data.SearchEngineLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +34,7 @@ public class ListFragment extends Fragment {
 
     ProgressBar mProgressBar;
 
-    //TODO: Need to free the memory!!
-    ArrayList<SelectItemListener> mSelectItemListeners;
+    SelectItemListener mSelectItemListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,9 +69,8 @@ public class ListFragment extends Fragment {
         if (!dbIsExists) loadDefaultEngines();
     }
 
-    public void RegisterSelectItemListener(SelectItemListener listener) {
-        if (mSelectItemListeners == null) mSelectItemListeners = new ArrayList<SelectItemListener>();
-        mSelectItemListeners.add(listener);
+    public void setSelectItemListener(SelectItemListener listener) {
+        mSelectItemListener = listener;
     }
 
     private void loadDefaultEngines() {
@@ -111,9 +108,7 @@ public class ListFragment extends Fragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             SearchEngineCursor cursor = (SearchEngineCursor)mAdapter.getCursor();
             UUID id = UUID.fromString(cursor.getString(cursor.getColumnIndex(SearchEngineCursor.COLUMN_ID)));
-            if (mSelectItemListeners != null) {
-                for (SelectItemListener listener : mSelectItemListeners) listener.onSelectItem(id);
-            }
+            if (mSelectItemListener != null) mSelectItemListener.onSelectItem(id);
         }
     };
 

@@ -4,21 +4,31 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import net.solutinno.websearch.data.SearchEngine;
 
 public class DetailActivity extends ActionBarActivity {
 
-    DetailFragment mDetailFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        mDetailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
-        mDetailFragment.SetDetailController(mDetailController);
+
+        FrameLayout content = new FrameLayout(this);
+        content.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        content.setId(R.id.layout_detail_container);
+        setContentView(content);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        DetailFragment fragment = new DetailFragment();
+        fragment.setArguments(getIntent().getExtras());
+        fragment.SetDetailCloseListener(mDetailCloseListener);
+        getSupportFragmentManager().beginTransaction()
+            .add(R.id.layout_detail_container, fragment,DetailFragment.class.getName())
+            .commit();
     }
 
     @Override
@@ -29,24 +39,13 @@ public class DetailActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mDetailFragment.onOptionsItemSelected(item);
+        return getSupportFragmentManager().findFragmentByTag(DetailFragment.class.getName()).onOptionsItemSelected(item);
     }
 
-    DetailFragment.DetailController mDetailController = new DetailFragment.DetailController() {
+    DetailFragment.CloseListener mDetailCloseListener = new DetailFragment.CloseListener() {
         @Override
-        public void OnDetailFinish(int mode, SearchEngine engine) {
-            switch (mode)
-            {
-                case DetailFragment.MODE_CANCEL:
-                    finish();
-                    break;
-                case DetailFragment.MODE_UPDATE:
-                    finish();
-                    break;
-                case DetailFragment.MODE_DELETE:
-                    finish();
-                    break;
-            }
+        public void onDetailClosed(int mode, SearchEngine engine) {
+            finish();
         }
     };
 

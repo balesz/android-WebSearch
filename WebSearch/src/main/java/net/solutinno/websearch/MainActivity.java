@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
-import net.solutinno.util.SoftKeyboardHelper;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 
@@ -21,14 +21,10 @@ import java.util.UUID;
 
 public class MainActivity extends ActionBarActivity {
 
-    int mActiveFragment = 0;
-
     Menu mMainMenu;
     DrawerLayout mDrawerLayout;
-    boolean mHasDrawerLayout;
-
     ListFragment mListFragment;
-    DetailFragment mDetailFragment;
+    FrameLayout mDetailContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,27 +32,23 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mListFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_list);
-        mListFragment.RegisterSelectItemListener(mSelectItemListener);
-
-        mDetailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+        mListFragment.setSelectItemListener(mSelectItemListener);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        mHasDrawerLayout = mDrawerLayout != null;
 
-        if (mHasDrawerLayout) {
+        if (mDrawerLayout != null) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mDrawerLayout.setDrawerListener(mDrawerListener);
-            mListFragment.RegisterSelectItemListener(mDetailFragment);
-            mDetailFragment.SetDetailController(mDetailController);
+
+            mDetailContainer = (FrameLayout) findViewById(R.id.layout_detail_container);
 
             DisplayMetrics metrics = getResources().getDisplayMetrics();
             int orientation = getResources().getConfiguration().orientation;
-            final View detail = mDrawerLayout.getChildAt(1);
-            if (detail != null && orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                ViewGroup.LayoutParams layoutParams = detail.getLayoutParams();
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                ViewGroup.LayoutParams layoutParams = mDetailContainer.getLayoutParams();
                 if (layoutParams != null) {
                     layoutParams.width = (metrics.widthPixels / 3) * 2;
-                    detail.setLayoutParams(layoutParams);
+                    mDetailContainer.setLayoutParams(layoutParams);
                 }
             }
         }
@@ -66,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         if (mMainMenu == null) mMainMenu = menu;
-        if (mActiveFragment == 0) {
+        if (!isDetailFragmentShown()) {
             getSupportActionBar().setIcon(R.drawable.ic_launcher);
             getSupportActionBar().setTitle(R.string.app_name);
             getMenuInflater().inflate(R.menu.main, mMainMenu);
@@ -90,16 +82,32 @@ public class MainActivity extends ActionBarActivity {
                 fragment.show(getSupportFragmentManager(), "import");
                 break;
             default:
-                if (mHasDrawerLayout) {
-                    mDetailFragment.onOptionsItemSelected(item);
+                if (isDetailFragmentShown()) {
+                    getDetailFragment().onOptionsItemSelected(item);
                 }
                 break;
         }
         return true;
     }
 
-    private Activity getActivity() {
-        return this;
+    private boolean isDetailFragmentShown() {
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.END);
+    }
+
+    private DetailFragment getDetailFragment() {
+        if (!isDetailFragmentShown()) return null;
+        return (DetailFragment) getSupportFragmentManager().findFragmentByTag(DetailFragment.class.getName());
+    }
+
+    private void createDetailFragment(UUID id) {
+        Bundle args = new Bundle();
+        if (id != null) args.putString(SearchEngineCursor.COLUMN_ID, id.toString());
+        DetailFragment fragment = new DetailFragment();
+        fragment.setArguments(args);
+        fragment.SetDetailCloseListener(mDetailCloseListener);
+        getSupportFragmentManager().beginTransaction()
+            .add(R.id.layout_detail_container, fragment, DetailFragment.class.getName())
+            .commit();
     }
 
     ImportFragment.ImportDialogResult mOnImportDialogResult = new ImportFragment.ImportDialogResult() {
@@ -114,7 +122,8 @@ public class MainActivity extends ActionBarActivity {
     ListFragment.SelectItemListener mSelectItemListener = new ListFragment.SelectItemListener() {
         @Override
         public void onSelectItem(UUID id) {
-            if (mHasDrawerLayout) {
+            if (mDrawerLayout != null) {
+                createDetailFragment(id);
                 mDrawerLayout.openDrawer(GravityCompat.END);
             }
             else {
@@ -126,56 +135,40 @@ public class MainActivity extends ActionBarActivity {
     };
 
     DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
-
         @Override
         public void onDrawerOpened(View view) {
-            mActiveFragment = 1;
             onCreateOptionsMenu(mMainMenu);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
-
         @Override
         public void onDrawerClosed(View view) {
-            mDetailFragment.ClearFields();
-            mActiveFragment = 0;
-            onCreateOptionsMenu(mMainMenu);
+            getSupportFragmentManager().beginTransaction()
+                .remove(getSupportFragmentManager().findFragmentByTag(DetailFragment.class.getName()))
+                .commit();
             mListFragment.getLoaderManager().getLoader(0).forceLoad();
+            onCreateOptionsMenu(mMainMenu);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
-            SoftKeyboardHelper.closeSoftKeyboard(getActivity());
         }
-
         @Override
         public void onDrawerSlide(View view, float v) {
         }
-
         @Override
         public void onDrawerStateChanged(int i) {
         }
     };
 
-    DetailFragment.DetailController mDetailController = new DetailFragment.DetailController() {
+    DetailFragment.CloseListener mDetailCloseListener = new DetailFragment.CloseListener() {
         @Override
-        public void OnDetailFinish(int mode, SearchEngine engine) {
-
+        public void onDetailClosed(int mode, SearchEngine engine) {
             mDrawerLayout.closeDrawer(GravityCompat.END);
-
-            switch (mode)
-            {
-                case DetailFragment.MODE_CANCEL:
-                    break;
-                case DetailFragment.MODE_UPDATE:
-                    break;
-                case DetailFragment.MODE_DELETE:
-                    break;
-            }
         }
     };
 
     private void Add() {
-        if (mHasDrawerLayout) {
-            mDetailFragment.onSelectItem(null);
+        if (mDrawerLayout != null) {
+            createDetailFragment(null);
             mDrawerLayout.openDrawer(GravityCompat.END);
         }
         else {

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.solutinno.util.DrawableHelper;
+import net.solutinno.util.SoftKeyboardHelper;
 import net.solutinno.util.UrlHelper;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
@@ -36,7 +37,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.UUID;
 
-public class DetailFragment extends Fragment implements ListFragment.SelectItemListener {
+public class DetailFragment extends Fragment {
 
     private final int ICON_WIDTH = 48;
     private final int ICON_HEIGHT = 48;
@@ -55,7 +56,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     ToastValidationProvider mValidationProvider;
     ToastHandler mToastHandler;
 
-    WeakReference<DetailController> mDetailController;
+    WeakReference<CloseListener> mDetailCloseListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
         mButtonLoadImage.setOnClickListener(mButtonLoadImageClickListener);
 
-        UUID id = getActivity().getIntent().hasExtra(SearchEngineCursor.COLUMN_ID) ?  UUID.fromString(getActivity().getIntent().getStringExtra(SearchEngineCursor.COLUMN_ID)) : null;
+        UUID id = getArguments() == null || !getArguments().containsKey(SearchEngineCursor.COLUMN_ID) ? null : UUID.fromString(getArguments().getString(SearchEngineCursor.COLUMN_ID));
         onSelectItem(id);
 
         getView().findViewById(R.id.detail_container).requestFocus();
@@ -97,15 +98,13 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     public void onPause() {
         super.onPause();
         mToastHandler.cancel();
+        SoftKeyboardHelper.closeSoftKeyboard(getActivity());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDetailController != null) {
-            mDetailController.clear();
-            mDetailController = null;
-        }
+        mDetailCloseListener = null;
     }
 
     @Override
@@ -125,8 +124,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         return true;
     }
 
-    @Override
-    public void onSelectItem(UUID id) {
+    private void onSelectItem(UUID id) {
         if (id != null) mEngine = DataProvider.getSearchEngine(getActivity(), id);
         else mEngine = new SearchEngine();
         setData();
@@ -215,8 +213,8 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         }
     };
 
-    public void SetDetailController(DetailController controller) {
-        mDetailController = new WeakReference<DetailController>(controller);
+    public void SetDetailCloseListener(CloseListener listener) {
+        mDetailCloseListener = new WeakReference<CloseListener>(listener);
     }
 
     public void ClearFields() {
@@ -262,17 +260,17 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
         ((ActionBarActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
     }
 
-    private void onDetailFinish(int mode) {
-        if (mDetailController != null) {
-            final DetailController detailController = mDetailController.get();
+    public void detailClose(int mode) {
+        if (mDetailCloseListener != null) {
+            final CloseListener detailController = mDetailCloseListener.get();
             if (detailController != null) {
-                detailController.OnDetailFinish(mode, mEngine);
+                detailController.onDetailClosed(mode, mEngine);
             }
         }
     }
 
     public void Cancel() {
-        onDetailFinish(MODE_CANCEL);
+        detailClose(MODE_CANCEL);
     }
 
     public void Save() {
@@ -288,7 +286,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
                 @Override
                 protected void onPostExecute(SearchEngine engine) {
                     mProgressBar.setVisibility(View.GONE);
-                    onDetailFinish(MODE_UPDATE);
+                    detailClose(MODE_UPDATE);
                 }
             }.execute(this);
         }
@@ -296,7 +294,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
 
     public void Delete() {
         if (mEngine.id == null) {
-            onDetailFinish(MODE_DELETE);
+            detailClose(MODE_DELETE);
             return;
         }
 
@@ -305,7 +303,7 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == DialogInterface.BUTTON_POSITIVE) {
                     DataProvider.deleteSearchEngine(getActivity(), getData());
-                    onDetailFinish(MODE_DELETE);
+                    detailClose(MODE_DELETE);
                 }
             }
         };
@@ -323,9 +321,9 @@ public class DetailFragment extends Fragment implements ListFragment.SelectItemL
     public static final int MODE_CANCEL     = 0;
     public static final int MODE_UPDATE     = 1;
 
-    public static interface DetailController
+    public static interface CloseListener
     {
-        void OnDetailFinish(int mode, SearchEngine engine);
+        void onDetailClosed(int mode, SearchEngine engine);
     }
 }
 

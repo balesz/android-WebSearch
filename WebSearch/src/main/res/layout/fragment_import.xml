@@ -7,18 +7,18 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@id/detail_fieldImportFromUrl"
+        android:id="@id/import_fieldImportFromUrl"
         android:hint="@string/hint_import_url"
         android:inputType="text|textUri"
         android:layout_marginTop="@dimen/field_vertical_margin"
         android:layout_width="match_parent" android:layout_height="wrap_content" />
 
     <ProgressBar
-        android:id="@id/detail_progressBar"
+        android:id="@id/import_progressBar"
         android:visibility="invisible"
         android:indeterminateOnly="true"
         style="@style/ProgressBarTheme"
-        android:layout_below="@id/detail_fieldImportFromUrl"
+        android:layout_below="@id/import_fieldImportFromUrl"
         android:layout_width="match_parent" android:layout_height="wrap_content" />
 
 </RelativeLayout>
