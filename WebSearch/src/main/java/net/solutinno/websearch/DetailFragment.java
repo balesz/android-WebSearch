@@ -140,6 +140,9 @@ public class DetailFragment extends Fragment {
                 toast.setMargin(0, 0);
                 mToastHandler.show(toast);
             }
+            else if (view instanceof EditText && !b) {
+                mToastHandler.cancel();
+            }
         }
     };
 
