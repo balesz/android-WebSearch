@@ -32,5 +32,7 @@
     <string name="dialog_import_defaults_message">Do you want to import the default engines?</string>
     <string name="confirmation_delete">Do you want to delete the search engine?</string>
     <string name="message_empty">Tap to import defaults!</string>
+    <string name="hint_pasteSearchTerm">Paste {searchTerm} string</string>
+    <string name="hint_downloadImage">Download image</string>
 
 </resources>

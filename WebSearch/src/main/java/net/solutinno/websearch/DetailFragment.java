@@ -31,6 +31,7 @@ import net.solutinno.websearch.data.SearchEngineCursor;
 import net.solutinno.util.NetworkHelper;
 import net.solutinno.util.StringHelper;
 import net.solutinno.widget.ToastHandler;
+import net.solutinno.widget.ToastHintProvider;
 import net.solutinno.widget.ToastValidationProvider;
 
 import java.lang.ref.WeakReference;
@@ -54,6 +55,7 @@ public class DetailFragment extends Fragment {
     SearchEngine mEngine;
 
     ToastValidationProvider mValidationProvider;
+    ToastHintProvider mHintProvider;
     ToastHandler mToastHandler;
 
     WeakReference<CloseListener> mDetailCloseListener;
@@ -63,6 +65,8 @@ public class DetailFragment extends Fragment {
         mToastHandler = new ToastHandler(getActivity());
         mValidationProvider = new ToastValidationProvider(mToastHandler);
         mValidationProvider.setOnValidate(mOnValidate);
+        mHintProvider = new ToastHintProvider(mToastHandler);
+        mHintProvider.setOnGetToastHint(mGetHint);
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
@@ -83,10 +87,11 @@ public class DetailFragment extends Fragment {
         mFieldDescription.setOnFocusChangeListener(mOnFocusChangeListener);
 
         mButtonAddSearchTerm = (ImageView) getView().findViewById(R.id.detail_buttonAddSearchTerm);
-        mButtonLoadImage = (ImageView) getView().findViewById(R.id.detail_buttonLoadImage);
-
         mButtonAddSearchTerm.setOnClickListener(mButtonAddSearchTermClickListener);
+        mButtonAddSearchTerm.setOnLongClickListener(mHintProvider);
+        mButtonLoadImage = (ImageView) getView().findViewById(R.id.detail_buttonLoadImage);
         mButtonLoadImage.setOnClickListener(mButtonLoadImageClickListener);
+        mButtonLoadImage.setOnLongClickListener(mHintProvider);
 
         UUID id = getArguments() == null || !getArguments().containsKey(SearchEngineCursor.COLUMN_ID) ? null : UUID.fromString(getArguments().getString(SearchEngineCursor.COLUMN_ID));
         onSelectItem(id);
@@ -187,6 +192,15 @@ public class DetailFragment extends Fragment {
                     mProgressBar.setVisibility(View.GONE);
                 }
             }.execute(url);
+        }
+    };
+
+    ToastHintProvider.OnGetToastHint mGetHint = new ToastHintProvider.OnGetToastHint() {
+        @Override
+        public Integer getHint(View view) {
+            if (view == mButtonAddSearchTerm) return R.string.hint_pasteSearchTerm;
+            else if (view == mButtonLoadImage) return R.string.hint_downloadImage;
+            else return null;
         }
     };
 
