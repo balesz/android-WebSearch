@@ -98,7 +98,7 @@ public class ImportFragment extends DialogFragment
                 }
                 @Override
                 protected void onPostExecute(SearchEngine engine) {
-                    Toast.makeText(getActivity(), engine == null ? R.string.information_import_unsuccesfull : R.string.information_import_succesfull, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), engine == null ? R.string.information_import_unsuccessful : R.string.information_import_successful, Toast.LENGTH_LONG).show();
                     mProgressBar.setVisibility(View.GONE);
                     if (engine != null) {
                         onImportDialogFinish(Activity.RESULT_OK);

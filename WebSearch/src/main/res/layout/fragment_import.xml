@@ -8,7 +8,7 @@
 
     <EditText
         android:id="@id/import_fieldImportFromUrl"
-        android:hint="@string/hint_import_url"
+        android:hint="@string/hint_import"
         android:inputType="text|textUri"
         android:layout_marginTop="@dimen/field_vertical_margin"
         android:layout_width="match_parent" android:layout_height="wrap_content" />

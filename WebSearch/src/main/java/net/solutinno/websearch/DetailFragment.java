@@ -180,7 +180,7 @@ public class DetailFragment extends Fragment {
                 }
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
-                    mToastHandler.show(mToastHandler.getToast(R.string.information_image_download_successfull, Toast.LENGTH_LONG));
+                    mToastHandler.show(mToastHandler.getToast(R.string.information_image_download_successful, Toast.LENGTH_LONG));
                     ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
                     BitmapDrawable icon = (BitmapDrawable) DrawableHelper.getDrawableFromBitmap(bitmap, ICON_WIDTH, ICON_HEIGHT);
                     actionBar.setIcon(icon);
@@ -315,8 +315,8 @@ public class DetailFragment extends Fragment {
             .setTitle(R.string.dialog_confirmation)
             .setMessage(R.string.confirmation_delete)
             .setCancelable(true)
-            .setNegativeButton(R.string.no, click)
-            .setPositiveButton(R.string.yes, click)
+            .setNegativeButton(R.string.caption_no, click)
+            .setPositiveButton(R.string.caption_yes, click)
             .show();
     }
 
