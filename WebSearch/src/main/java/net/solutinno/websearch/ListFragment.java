@@ -13,6 +13,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -44,6 +45,8 @@ public class ListFragment extends Fragment {
         emptyList.setOnClickListener(importClick);
         progressBar = (ProgressBar) result.findViewById(R.id.list_progressBar);
         listView = (ListView) result.findViewById(R.id.list_listView);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        listView.setItemsCanFocus(true);
         listView.setOnItemClickListener(itemClickListener);
         return result;
     }
@@ -138,6 +141,10 @@ public class ListFragment extends Fragment {
             .setPositiveButton(R.string.caption_yes, clickListener)
             .setNegativeButton(R.string.caption_no, clickListener)
             .show();
+    }
+
+    public void clearChoices() {
+        listView.clearChoices();
     }
 
     public static interface SelectItemListener

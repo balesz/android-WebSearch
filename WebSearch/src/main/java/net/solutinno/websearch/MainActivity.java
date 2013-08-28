@@ -117,6 +117,7 @@ public class MainActivity extends ActionBarActivity
                 Intent detail = new Intent(getBaseContext(), DetailActivity.class);
                 detail.putExtra(SearchEngineCursor.COLUMN_ID, id.toString());
                 startActivityForResult(detail, 0);
+                listFragment.clearChoices();
             }
         }
     };
@@ -135,6 +136,7 @@ public class MainActivity extends ActionBarActivity
             supportInvalidateOptionsMenu();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
+            listFragment.clearChoices();
         }
         @Override
         public void onDrawerSlide(View view, float v) {
@@ -150,7 +152,6 @@ public class MainActivity extends ActionBarActivity
             drawerLayout.closeDrawer(GravityCompat.END);
         }
     };
-
 
     private void add() {
         if (drawerLayout != null) {
