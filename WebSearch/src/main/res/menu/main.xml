@@ -11,4 +11,9 @@
           android:title="@string/action_add"
           yourapp:showAsAction="always"/>
 
+    <item android:id="@+id/action_about"
+          android:icon="@drawable/ic_info"
+          android:title="@string/action_about"
+          yourapp:showAsAction="ifRoom"/>
+
 </menu>

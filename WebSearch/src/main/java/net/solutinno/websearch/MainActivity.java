@@ -88,6 +88,10 @@ public class MainActivity extends ActionBarActivity
                 fragment.setOnImportDialogResult(onImportDialogResult);
                 fragment.show(getSupportFragmentManager(), "import");
                 break;
+            case R.id.action_about:
+                AboutFragment about = new AboutFragment();
+                about.show(getSupportFragmentManager(), "about");
+                break;
             default:
                 if (isDetailFragmentShown()) {
                     getDetailFragment().onOptionsItemSelected(item);
