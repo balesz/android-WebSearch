@@ -30,8 +30,8 @@ android {
 
     defaultConfig {
         packageName 'net.solutinno.websearch'
-        versionCode 5
-        versionName '1.0.2'
+        versionCode 6
+        versionName '1.0.3'
         minSdkVersion 10
         targetSdkVersion 15
     }
