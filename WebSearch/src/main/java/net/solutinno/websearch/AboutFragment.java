@@ -9,6 +9,13 @@ import android.support.v4.app.DialogFragment;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteStreams;
+
+import net.solutinno.util.PackageHelper;
+
+import java.io.InputStream;
+
 public class AboutFragment extends DialogFragment
 {
     WebView mWebView;
@@ -33,7 +40,16 @@ public class AboutFragment extends DialogFragment
     }
 
     private void initWebView() {
-        mWebView.loadUrl("file:///android_asset/about/index.html");
+        String content = null;
+        try {
+            InputStream input = getActivity().getAssets().open("about/index.html");
+            content = new String(ByteStreams.toByteArray(input), Charsets.UTF_8);
+            content = content.replace("{VERSION}", PackageHelper.getPackageVersionName(getActivity()));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        mWebView.loadDataWithBaseURL("file:///android_asset/about/", content, null, "UTF-8", null);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -44,5 +60,4 @@ public class AboutFragment extends DialogFragment
             }
         });
     }
-
 }
