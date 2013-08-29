@@ -6,6 +6,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:0.5.+'
     }
 }
+
 apply plugin: 'android'
 
 repositories {
@@ -29,5 +30,12 @@ android {
         versionName '1.0.1'
         minSdkVersion 10
         targetSdkVersion 15
+    }
+
+    buildTypes {
+        debug {
+            packageNameSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
     }
 }
