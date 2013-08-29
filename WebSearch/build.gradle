@@ -21,18 +21,33 @@ dependencies {
     compile project (':lib:android-lib-Solutinno')
 }
 
+def keyStoreDir = '../../_keystore/'
+
 android {
     compileSdkVersion 18
     buildToolsVersion "18.0.1"
 
     defaultConfig {
-        versionCode 4
-        versionName '1.0.1'
+        packageName 'net.solutinno.websearch'
+        versionCode 5
+        versionName '1.0.2'
         minSdkVersion 10
         targetSdkVersion 15
     }
 
+    signingConfigs {
+        release {
+            storeFile file(keyStoreDir.concat('android-keystore.jks'))
+            keyAlias android.defaultConfig.packageName
+            storePassword new File(keyStoreDir.concat('storePassword')).readLines().get(0)
+            keyPassword new File(keyStoreDir.concat('keyPassword-'.concat(keyAlias))).readLines().get(0)
+        }
+    }
+
     buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
         debug {
             packageNameSuffix '.debug'
             versionNameSuffix '-debug'
