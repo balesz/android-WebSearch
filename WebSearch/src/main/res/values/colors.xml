@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="drawer_background_color">#ffffffff</color>
-    <color name="dark_blue">#0099CC</color>
-    <color name="light_blue">#33B5E5</color>
-    <color name="dark_red">#CC0000</color>
-    <color name="light_red">#FF4444</color>
     <color name="white">#ffffffff</color>
     <color name="dark_grey">#ff3c3f41</color>
+    <color name="dark_green">#ff80b105</color>
+    <color name="light_green">#ffafd449</color>
+    <color name="dark_blue">#ff25a8d7</color>
+    <color name="light_blue">#ff86cde7</color>
+    <color name="dark_red">#ffe12928</color>
+    <color name="light_red">#fff37675</color>
 </resources>

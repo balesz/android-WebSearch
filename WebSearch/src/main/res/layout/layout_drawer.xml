@@ -20,7 +20,7 @@
 
     <FrameLayout
         android:id="@id/layout_detail_container"
-        android:background="@color/drawer_background_color"
+        android:background="@color/white"
         android:layout_gravity="end"
         android:layout_width="match_parent" android:layout_height="match_parent"/>
 
