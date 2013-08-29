@@ -21,7 +21,7 @@ dependencies {
     compile project (':lib:android-lib-Solutinno')
 }
 
-def keyStoreDir = '../../_keystore/'
+def keyStoreDir = "$System.env.HOME".concat('/Projects/_keystore/')
 
 android {
     compileSdkVersion 18
