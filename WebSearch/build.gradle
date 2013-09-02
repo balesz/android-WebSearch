@@ -27,11 +27,11 @@ android {
     buildToolsVersion "18.0.1"
 
     defaultConfig {
-        packageName 'net.solutinno.websearch'
         versionCode 6
         versionName '1.0.3'
         minSdkVersion 10
         targetSdkVersion 15
+        packageName 'net.solutinno.websearch'
     }
 
     signingConfigs {
@@ -65,7 +65,8 @@ def initKeyStore() {
 }
 
 def String getKeyStorePath() {
-    return System.getenv('KEYSTORE_PATH')
+    String result = System.getenv('KEYSTORE_PATH')
+    return result == null ? "" : result
 }
 def File getStoreFile() {
     File file = new File(getKeyStorePath().concat('android-keystore.jks'))
