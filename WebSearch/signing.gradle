@@ -1,0 +1,55 @@
+
+
+apply plugin : AndroidSigningPlugin
+
+class AndroidSigningPlugin implements Plugin<Project>
+{
+    void apply(Project project) {
+        project.convention.plugins.androidSinging = new AndroidSigningConvention(project)
+    }
+}
+
+class AndroidSigningConvention
+{
+    Project project
+
+    String keyAlias
+
+    AndroidSigningConvention(Project project) {
+        this.project = project
+    }
+
+    def initSigning(android,keyAlias) {
+        this.keyAlias = keyAlias
+        if (getStoreFile() != null && getKeyPassword() != null) {
+            android.signingConfigs.release.storeFile = getStoreFile()
+            android.signingConfigs.release.storePassword = getStorePassword()
+            android.signingConfigs.release.keyAlias = keyAlias
+            android.signingConfigs.release.keyPassword = getKeyPassword()
+            android.buildTypes.release.signingConfig = android.signingConfigs.release
+        }
+    }
+    
+    private String getKeyStorePath() {
+        String result = System.getenv('KEYSTORE_PATH')
+        return result == null ? "" : result
+    }
+
+    private File getStoreFile() {
+        File file = new File(getKeyStorePath().concat('android-keystore.jks'))
+        if (file.exists()) return file
+        else return null
+    }
+
+    private String getStorePassword() {
+        File file = new File(getKeyStorePath().concat("storePassword"))
+        if (file.exists()) return file.readLines().get(0)
+        else return null
+    }
+
+    private String getKeyPassword() {
+        File file = new File(getKeyStorePath().concat("keyPassword-").concat(keyAlias))
+        if (file.exists()) return file.readLines().get(0)
+        else return null
+    }
+}

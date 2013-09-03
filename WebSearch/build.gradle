@@ -46,35 +46,5 @@ android {
     }
 }
 
-initKeyStore(android)
-
-def initKeyStore(android) {
-    def keyAlias = android.defaultConfig.packageName
-    if (getStoreFile() != null && getKeyPassword(keyAlias) != null) {
-        android.signingConfigs.release.storeFile = getStoreFile()
-        android.signingConfigs.release.storePassword = getStorePassword()
-        android.signingConfigs.release.keyAlias = keyAlias
-        android.signingConfigs.release.keyPassword = getKeyPassword(keyAlias)
-        android.buildTypes.release.signingConfig = android.signingConfigs.release
-    }
-}
-
-def String getKeyStorePath() {
-    String result = System.getenv('KEYSTORE_PATH')
-    return result == null ? "" : result
-}
-def File getStoreFile() {
-    File file = new File(getKeyStorePath().concat('android-keystore.jks'))
-    if (file.exists()) return file
-    else return null
-}
-def String getStorePassword() {
-    File file = new File(getKeyStorePath().concat("storePassword"))
-    if (file.exists()) return file.readLines().get(0)
-    else return null
-}
-def String getKeyPassword(keyAlias) {
-    File file = new File(getKeyStorePath().concat("keyPassword-").concat(keyAlias))
-    if (file.exists()) return file.readLines().get(0)
-    else return null
-}
+apply from: 'signing.gradle'
+initSigning(android,android.defaultConfig.packageName)
