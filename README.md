@@ -8,11 +8,13 @@ You can manage your search engines on the admin UI. Using the admin UI is very e
 
 ### Share UI
 The app uses the Share API of Android. This means that you can search any string in any app, provided the app allows plain text sharing. For example, you are reading an article in feedly or in Pocket. You have to do the followings:
+
 - Select any text in the article (tap and hold on the text)
 - Tap the share icon
 - Select the WebSearch app from the list
 - Select a search engine
 - The selected engine will open in your browser
+
 That's it.
 
 I’m planning an import function. This function will be able to import OpenSearch engines from http://mycroftproject.com and http://www.searchplugins.net.
