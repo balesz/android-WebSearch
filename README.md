@@ -18,3 +18,7 @@ The app uses the Share API of Android. This means that you can search any string
 That's it.
 
 I’m planning an import function. This function will be able to import OpenSearch engines from http://mycroftproject.com and http://www.searchplugins.net.
+
+## Google Play
+
+https://play.google.com/store/apps/details?id=net.solutinno.websearch
