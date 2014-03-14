@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -14,23 +14,23 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
-    compile 'com.android.support:appcompat-v7:18.0.+'
-    compile 'com.google.guava:guava:14.0.+'
+    compile 'com.android.support:support-v4:19.0.+'
+    compile 'com.android.support:appcompat-v7:19.0.+'
+    compile 'com.google.guava:guava:16.0.+'
     compile 'com.j256.ormlite:ormlite-android:4.45'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.5'
     compile project (':lib:android-lib-Solutinno')
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "18.0.1"
+    compileSdkVersion 19
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         versionCode 6
         versionName '1.0.3'
         minSdkVersion 10
-        targetSdkVersion 15
+        targetSdkVersion 19
         packageName 'net.solutinno.websearch'
     }
 
