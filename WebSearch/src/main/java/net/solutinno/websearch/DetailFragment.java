@@ -34,6 +34,8 @@ import net.solutinno.widget.ToastHandler;
 import net.solutinno.widget.ToastHintProvider;
 import net.solutinno.widget.ToastValidationProvider;
 
+import org.htmlparser.util.Translate;
+
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.UUID;
@@ -246,10 +248,10 @@ public class DetailFragment extends Fragment {
     private SearchEngine getData() {
         SearchEngine result = new SearchEngine();
         result.id = mEngine.id == null ? UUID.randomUUID() : mEngine.id;
-        result.name = StringHelper.getStringFromCharSequence(mFieldName.getText());
-        result.url = StringHelper.getStringFromCharSequence(mFieldUrl.getText());
-        result.imageUrl = StringHelper.getStringFromCharSequence(mFieldImageUrl.getText());
-        result.description = StringHelper.getStringFromCharSequence(mFieldDescription.getText());
+        result.name = Translate.decode(StringHelper.getStringFromCharSequence(mFieldName.getText()));
+        result.url = Translate.decode(StringHelper.getStringFromCharSequence(mFieldUrl.getText()));
+        result.imageUrl = Translate.decode(StringHelper.getStringFromCharSequence(mFieldImageUrl.getText()));
+        result.description = Translate.decode(StringHelper.getStringFromCharSequence(mFieldDescription.getText()));
         return result;
     }
 

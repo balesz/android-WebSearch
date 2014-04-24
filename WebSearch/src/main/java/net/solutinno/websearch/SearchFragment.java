@@ -19,6 +19,8 @@ import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.SearchEngine;
 import net.solutinno.websearch.data.SearchEngineCursor;
 
+import org.htmlparser.util.Translate;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.UUID;
@@ -81,7 +83,7 @@ public class SearchFragment extends DialogFragment
             if (id == null) return;
             SearchEngine engine = DataProvider.getSearchEngine(getActivity(), UUID.fromString(id));
             try {
-                String url = engine.url.replace(SearchEngine.SEARCH_TERM, URLEncoder.encode(mSearchTerm, "UTF-8"));
+                String url = Translate.decode(engine.url).replace(SearchEngine.SEARCH_TERM, URLEncoder.encode(mSearchTerm, "UTF-8"));
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
             } catch (UnsupportedEncodingException e) {

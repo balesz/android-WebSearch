@@ -14,9 +14,8 @@ import java.util.UUID;
 
 public class Database extends OrmLiteSqliteOpenHelper
 {
-
     private static final String DB_NAME = "search_engines.sqlite";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     public final RuntimeExceptionDao<SearchEngine, UUID> engine;
 
@@ -40,6 +39,6 @@ public class Database extends OrmLiteSqliteOpenHelper
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-
+        if (oldVersion == 1 && newVersion == 2) DataProvider.upgrade1to2(this);
     }
 }

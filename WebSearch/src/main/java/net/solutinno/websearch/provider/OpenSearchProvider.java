@@ -6,6 +6,7 @@ import net.solutinno.websearch.data.SearchEngine;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
+import org.htmlparser.util.Translate;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -93,16 +94,16 @@ public class OpenSearchProvider
         SearchEngine result = new SearchEngine();
         try {
             Object[] nodes = mRoot.evaluateXPath("//ShortName");
-            result.name = String.valueOf(nodes == null || nodes.length < 1 ? null : ((TagNode)nodes[0]).getText());
+            result.name = nodes == null || nodes.length < 1 ? null : Translate.decode(String.valueOf(((TagNode) nodes[0]).getText()));
 
             nodes = mRoot.evaluateXPath("//Description");
-            result.description = String.valueOf(nodes == null || nodes.length < 1 ? null : ((TagNode)nodes[0]).getText());
+            result.description = nodes == null || nodes.length < 1 ? null : Translate.decode(String.valueOf(((TagNode) nodes[0]).getText()));
 
             nodes = mRoot.evaluateXPath("//Image");
-            result.imageUrl = String.valueOf(nodes == null || nodes.length < 1 ? null : ((TagNode)nodes[0]).getText());
+            result.imageUrl = nodes == null || nodes.length < 1 ? null : Translate.decode(String.valueOf(((TagNode) nodes[0]).getText()));
 
             nodes = mRoot.evaluateXPath("//Url[@type='text/html']/@template");
-            result.url = String.valueOf(nodes == null || nodes.length < 1 ? null : nodes[0]);
+            result.url = nodes == null || nodes.length < 1 ? null : Translate.decode(String.valueOf(nodes[0]));
 
             return result;
         }

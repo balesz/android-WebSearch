@@ -10,6 +10,8 @@ import net.solutinno.util.UrlHelper;
 import net.solutinno.websearch.Application;
 import net.solutinno.websearch.provider.OpenSearchProvider;
 
+import org.htmlparser.util.Translate;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -101,4 +103,14 @@ public class DataProvider
         return null;
     }
 
+    public static void upgrade1to2(Database database) {
+        List<SearchEngine> lst = database.engine.queryForAll();
+        for (SearchEngine item : lst) {
+            item.name = item.name == null ? null : Translate.decode(item.name);
+            item.description = item.description == null ? null : Translate.decode(item.description);
+            item.imageUrl = item.imageUrl == null ? null : Translate.decode(item.imageUrl);
+            item.url = item.url == null ? null : Translate.decode(item.url);
+            database.engine.update(item);
+        }
+    }
 }
