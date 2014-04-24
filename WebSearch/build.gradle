@@ -14,12 +14,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.+'
-    compile 'com.android.support:appcompat-v7:19.0.+'
+    compile 'com.android.support:support-v4:19.1.+'
+    compile 'com.android.support:appcompat-v7:19.1.+'
     compile 'com.google.guava:guava:16.0.+'
     compile 'com.j256.ormlite:ormlite-android:4.45'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.5'
-    compile project (':lib:android-lib-Solutinno')
+    compile files('libs/htmlparser.jar')
+    compile project(':lib:android-lib-Solutinno')
 }
 
 android {
@@ -27,8 +28,8 @@ android {
     buildToolsVersion '19.0.3'
 
     defaultConfig {
-        versionCode 6
-        versionName '1.0.3'
+        versionCode 7
+        versionName '1.0.4'
         minSdkVersion 10
         targetSdkVersion 19
         packageName 'net.solutinno.websearch'
