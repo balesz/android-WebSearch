@@ -19,6 +19,8 @@ dependencies {
     compile 'com.google.guava:guava:16.0.+'
     compile 'com.j256.ormlite:ormlite-android:4.45'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.5'
+    compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter:3.0.1@aar'
+    compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.0.1@aar'
     compile files('libs/htmlparser.jar')
     compile project(':lib:android-lib-Solutinno')
 }

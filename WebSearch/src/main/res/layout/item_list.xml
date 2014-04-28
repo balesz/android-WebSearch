@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<net.solutinno.widget.CheckableLinearLayout
+<com.manuelpeinado.multichoiceadapter.CheckableLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:background="@drawable/selector_listview_item"
@@ -31,4 +31,4 @@
 
     </LinearLayout>
 
-</net.solutinno.widget.CheckableLinearLayout>
+</com.manuelpeinado.multichoiceadapter.CheckableLinearLayout>

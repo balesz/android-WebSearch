@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import net.solutinno.websearch.adapter.ListMultiChoiceAdapter;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.Database;
 import net.solutinno.websearch.data.SearchEngine;
@@ -31,7 +32,7 @@ import java.util.UUID;
 public class ListFragment extends Fragment {
 
     ListView listView;
-    SimpleCursorAdapter adapter;
+    ListMultiChoiceAdapter adapter;
     ProgressBar progressBar;
     View emptyList;
 
@@ -46,8 +47,6 @@ public class ListFragment extends Fragment {
         progressBar = (ProgressBar) result.findViewById(R.id.list_progressBar);
         listView = (ListView) result.findViewById(R.id.list_listView);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setItemsCanFocus(true);
-        listView.setOnItemClickListener(itemClickListener);
         return result;
     }
 
@@ -55,8 +54,9 @@ public class ListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (listView != null) {
-            adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_list, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
-            listView.setAdapter(adapter);
+            adapter = new ListMultiChoiceAdapter(savedInstanceState, getActivity(), R.layout.item_list, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
+            adapter.setAdapterView(listView);
+            adapter.setOnItemClickListener(itemClickListener);
             adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                 @Override
                 public boolean setViewValue(View view, Cursor cursor, int i) {
@@ -70,6 +70,12 @@ public class ListFragment extends Fragment {
         boolean dbIsExists = Database.isExists(getActivity());
         getLoaderManager().initLoader(0, null, loaderCallbacks);
         if (!dbIsExists) loadDefaultEngines();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        adapter.save(outState);
     }
 
     public void setSelectItemListener(SelectItemListener listener) {
