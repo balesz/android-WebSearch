@@ -14,10 +14,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.+'
-    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.j256.ormlite:ormlite-android:+'
     compile 'com.google.guava:guava:16.0.+'
-    compile 'com.j256.ormlite:ormlite-android:4.45'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.5'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter:3.0.1@aar'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.0.1@aar'
