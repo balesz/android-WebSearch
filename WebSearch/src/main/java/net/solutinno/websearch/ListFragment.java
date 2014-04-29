@@ -57,6 +57,12 @@ public class ListFragment extends Fragment {
             adapter = new ListMultiChoiceAdapter(savedInstanceState, getActivity(), R.layout.item_list, new SearchEngineCursor(), SearchEngineCursor.LIST_FIELDS, SearchEngineCursor.LIST_UI_FIELDS, 1);
             adapter.setAdapterView(listView);
             adapter.setOnItemClickListener(itemClickListener);
+            adapter.setOnFinishActionMode(new Runnable() {
+                @Override
+                public void run() {
+                    getLoaderManager().getLoader(0).forceLoad();
+                }
+            });
             adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
                 @Override
                 public boolean setViewValue(View view, Cursor cursor, int i) {
