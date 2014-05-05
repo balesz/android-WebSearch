@@ -30,8 +30,8 @@ android {
     buildToolsVersion '19.0.3'
 
     defaultConfig {
-        versionCode 7
-        versionName '1.0.4'
+        versionCode 8
+        versionName '1.0.5'
         minSdkVersion 10
         targetSdkVersion 19
         packageName 'net.solutinno.websearch'
