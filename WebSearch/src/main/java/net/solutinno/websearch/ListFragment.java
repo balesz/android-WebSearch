@@ -3,6 +3,7 @@ package net.solutinno.websearch;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import net.solutinno.util.DisplayHelper;
 import net.solutinno.websearch.adapter.ListMultiChoiceAdapter;
 import net.solutinno.websearch.data.DataProvider;
 import net.solutinno.websearch.data.Database;
@@ -131,6 +133,7 @@ public class ListFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == DialogInterface.BUTTON_POSITIVE) {
                     progressBar.setVisibility(View.VISIBLE);
+                    getActivity().setRequestedOrientation(DisplayHelper.getScreenRotation(getActivity()));
                     new AsyncTask<Context, Integer, Boolean>() {
                         @Override
                         protected Boolean doInBackground(Context... contexts) {
@@ -141,6 +144,7 @@ public class ListFragment extends Fragment {
                         protected void onPostExecute(Boolean aBoolean) {
                             progressBar.setVisibility(View.GONE);
                             getLoaderManager().getLoader(0).forceLoad();
+                            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                         }
                     }.execute(getActivity());
                 }

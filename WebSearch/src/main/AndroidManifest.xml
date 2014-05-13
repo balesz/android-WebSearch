@@ -18,6 +18,7 @@
             android:name=".MainActivity"
             android:finishOnCloseSystemDialogs="true"
             android:finishOnTaskLaunch="true"
+            android:screenOrientation="sensor"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
