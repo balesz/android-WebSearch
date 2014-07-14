@@ -30,6 +30,7 @@ proguard/
 
 # folders related to builds
 .gradle/
+build/
 */build/
 out/
 local.properties

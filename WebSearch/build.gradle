@@ -1,15 +1,15 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         versionCode 10
         versionName '1.0.7'
         minSdkVersion 10
         targetSdkVersion 19
-        packageName 'net.solutinno.websearch'
+        applicationId 'net.solutinno.websearch'
     }
 
     signingConfigs {
@@ -18,17 +18,17 @@ android {
 
     buildTypes {
         debug {
-            packageNameSuffix '.debug'
+            applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:appcompat-v7:20.+'
     compile 'com.j256.ormlite:ormlite-android:+'
-    compile 'com.google.guava:guava:16.0.+'
+    compile 'com.google.guava:guava:17.+'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.5'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter:3.0.1@aar'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.0.1@aar'
