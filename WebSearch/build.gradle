@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.1'
 
     defaultConfig {
         versionCode 10
         versionName '1.0.7'
         minSdkVersion 10
-        targetSdkVersion 19
+        targetSdkVersion 21
         applicationId 'net.solutinno.websearch'
     }
 
@@ -25,10 +25,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.+'
-    compile 'com.android.support:appcompat-v7:20.+'
-    compile 'com.j256.ormlite:ormlite-android:+'
-    compile 'com.google.guava:guava:17.+'
+    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.android.support:appcompat-v7:21.0.2'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.google.guava:guava:18.0'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.5'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter:3.0.1@aar'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.0.1@aar'
@@ -38,4 +38,4 @@ dependencies {
 
 apply from: 'signing.gradle'
 
-initSigning(android,android.defaultConfig.packageName)
+initSigning(android,android.defaultConfig.applicationId)
