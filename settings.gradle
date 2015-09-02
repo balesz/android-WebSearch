@@ -1,1 +1,3 @@
-include ':WebSearch', ':lib:android-lib-Solutinno'
+include ':WebSearch'
+include ':android-lib-Solutinno'
+project(":android-lib-Solutinno").setProjectDir(new File("lib/android-lib-Solutinno"))

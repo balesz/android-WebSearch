@@ -33,7 +33,7 @@ dependencies {
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter:3.0.1@aar'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.0.1@aar'
     compile files('libs/htmlparser.jar')
-    compile project(':lib:android-lib-Solutinno')
+    compile project(':android-lib-Solutinno')
 }
 
 apply from: 'signing.gradle'
